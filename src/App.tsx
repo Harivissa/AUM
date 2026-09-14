@@ -1,0 +1,88 @@
+import { useEffect, useState } from 'react'
+import Navbar from './components/Navbar'
+import HeroSection from './components/HeroSection'
+import Footer from './components/Footer'
+import Fullscreen3DModal from './components/Fullscreen3DModal'
+import GlobalCosmos3D from './components/GlobalCosmos3D'
+import EpicDetailPage from './components/EpicDetailPage'
+import FestivalsPage from './components/FestivalsPage'
+import InvalidRoutePage from './components/InvalidRoutePage'
+import { useReducedMotion } from './hooks/useReducedMotion'
+import { ExplorePage, ShastraPage, TirthaPage, ItihasaPage, PuranaPage, DevataPage, SmritiPage, YoungSeekersPage, VerifyPage, DharmaPage, SciencePage } from './components/ChamberPage'
+
+function getRoute(): { route: string; invalid: boolean } {
+  const hash = window.location.hash.replace(/^#/, '')
+  const allowed = ['explore','shastra','tirtha','itihasa','purana','devata','festivals','smriti','young-seekers','verify','dharma','science','epic/ramayana','epic/mahabharata']
+  return { route: allowed.includes(hash) ? hash : 'home', invalid: Boolean(hash) && !allowed.includes(hash) }
+}
+
+export default function App() {
+  const [reducedMotion, setReducedMotion] = useReducedMotion()
+  const [fullscreenOrbitOpen, setFullscreenOrbitOpen] = useState(false)
+  const [{ route, invalid: invalidRoute }, setRoute] = useState(getRoute)
+
+  useEffect(() => {
+    const onHash = () => setRoute(getRoute())
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
+  const navigate = (href: string) => {
+    const target = href.replace(/^#/, '')
+    window.location.hash = target
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' })
+  }
+
+  const openEpic = (kind: 'ramayana' | 'mahabharata') => {
+    window.location.hash = `epic/${kind}`
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' })
+  }
+
+  const backHome = () => {
+    window.location.hash = ''
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' })
+  }
+
+  if (route !== 'home' || invalidRoute) {
+    const page = (() => {
+      switch (route) {
+        case 'explore': return <ExplorePage onBack={backHome} />
+        case 'shastra': return <ShastraPage onBack={backHome} onOpenEpic={openEpic} />
+        case 'tirtha': return <TirthaPage onBack={backHome} />
+        case 'itihasa': return <ItihasaPage onBack={backHome} onOpenEpic={openEpic} />
+        case 'purana': return <PuranaPage onBack={backHome} />
+        case 'devata': return <DevataPage onBack={backHome} />
+        case 'festivals': return <FestivalsPage onBack={backHome} onNavigate={navigate} />
+        case 'smriti': return <SmritiPage onBack={backHome} />
+        case 'young-seekers': return <YoungSeekersPage onBack={backHome} />
+        case 'verify': return <VerifyPage onBack={backHome} />
+        case 'dharma': return <DharmaPage onBack={backHome} />
+        case 'science': return <SciencePage onBack={backHome} />
+        case 'epic/ramayana':
+        case 'epic/mahabharata': return <EpicDetailPage kind={route.split('/')[1] as 'ramayana'|'mahabharata'} onBack={backHome} />
+        default: return <InvalidRoutePage onHome={backHome} />
+      }
+    })()
+    return (
+      <div className="min-h-screen w-full bg-void text-gold-200 relative">
+        <GlobalCosmos3D reducedMotion={reducedMotion} />
+        <Navbar />
+        {page}
+        <Footer />
+        <Fullscreen3DModal isOpen={fullscreenOrbitOpen} onClose={() => setFullscreenOrbitOpen(false)} reducedMotion={reducedMotion} onToggleReducedMotion={setReducedMotion} onNavigate={navigate} />
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen w-full bg-void text-gold-200 selection:bg-gold-500/30 selection:text-white relative">
+      <GlobalCosmos3D reducedMotion={reducedMotion} />
+      <Navbar />
+      <main className="relative z-10">
+        <HeroSection reducedMotion={reducedMotion} onNavigate={navigate} onOpenFullscreenOrbit={() => setFullscreenOrbitOpen(true)} />
+      </main>
+      <Footer />
+      <Fullscreen3DModal isOpen={fullscreenOrbitOpen} onClose={() => setFullscreenOrbitOpen(false)} reducedMotion={reducedMotion} onToggleReducedMotion={setReducedMotion} onNavigate={navigate} />
+    </div>
+  )
+}
