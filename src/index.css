@@ -629,3 +629,107 @@ html[data-aum-theme="light"] .hero-heritage-backdrop {
   .hero-water-shimmer { animation: none; }
   html { scroll-behavior: auto; }
 }
+
+/* =====================================================
+   FIX 1 — Light Mode readability (targeted, additive)
+   Only recolors elements that did not adapt to the light
+   parchment theme. Structure, layout and dark mode are
+   left unchanged.
+   ===================================================== */
+
+/* Gold gradient / shimmer headings use very light gradients that vanish
+   on the parchment background — render them as solid dark gold instead. */
+html[data-aum-theme="light"] .gradient-gold,
+html[data-aum-theme="light"] .gradient-gold-subtle,
+html[data-aum-theme="light"] .shimmer-text {
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  color: #8a631f !important;
+  animation: none !important;
+}
+
+/* Hardcoded dark card / diagram / dropdown surfaces (arbitrary hex + gold-950)
+   that the broad bg-black/ override does not catch. Recolor to parchment. */
+html[data-aum-theme="light"] [class*="bg-[#291205]"],
+html[data-aum-theme="light"] [class*="bg-[#0d0a18]"],
+html[data-aum-theme="light"] [class*="bg-[#0b0913]"],
+html[data-aum-theme="light"] [class*="bg-[#05040b]"],
+html[data-aum-theme="light"] [class*="bg-[#070611]"],
+html[data-aum-theme="light"] [class*="bg-[#05060c]"],
+html[data-aum-theme="light"] [class*="bg-[#03050a]"],
+html[data-aum-theme="light"] [class*="bg-[#05030b]"],
+html[data-aum-theme="light"] [class*="bg-[#070512]"],
+html[data-aum-theme="light"] [class*="bg-[#080711]"],
+html[data-aum-theme="light"] [class*="bg-gold-950"] {
+  background-color: rgba(255, 253, 247, 0.92) !important;
+  border-color: rgba(140, 100, 30, 0.22) !important;
+  color: #2d2418 !important;
+}
+
+/* The floating decorative Sanskrit watermarks intentionally use very low
+   opacity; the solid text-gold overrides above would make them pop as bold
+   dark glyphs. Keep them faint in light mode. */
+html[data-aum-theme="light"] [class*="text-gold-100/["],
+html[data-aum-theme="light"] [class*="text-gold-300/3"] {
+  color: rgba(140, 100, 30, 0.18) !important;
+}
+
+@media (prefers-color-scheme: light) {
+  html[data-aum-theme="system"] .gradient-gold,
+  html[data-aum-theme="system"] .gradient-gold-subtle,
+  html[data-aum-theme="system"] .shimmer-text {
+    background: none !important;
+    -webkit-text-fill-color: currentColor !important;
+    color: #8a631f !important;
+    animation: none !important;
+  }
+  html[data-aum-theme="system"] [class*="bg-[#291205]"],
+  html[data-aum-theme="system"] [class*="bg-[#0d0a18]"],
+  html[data-aum-theme="system"] [class*="bg-[#0b0913]"],
+  html[data-aum-theme="system"] [class*="bg-[#05040b]"],
+  html[data-aum-theme="system"] [class*="bg-[#070611]"],
+  html[data-aum-theme="system"] [class*="bg-[#05060c]"],
+  html[data-aum-theme="system"] [class*="bg-[#03050a]"],
+  html[data-aum-theme="system"] [class*="bg-[#05030b]"],
+  html[data-aum-theme="system"] [class*="bg-[#070512]"],
+  html[data-aum-theme="system"] [class*="bg-[#080711]"],
+  html[data-aum-theme="system"] [class*="bg-gold-950"] {
+    background-color: rgba(255, 253, 247, 0.92) !important;
+    border-color: rgba(140, 100, 30, 0.22) !important;
+    color: #2d2418 !important;
+  }
+  html[data-aum-theme="system"] [class*="text-gold-100/["],
+  html[data-aum-theme="system"] [class*="text-gold-300/3"] {
+    color: rgba(140, 100, 30, 0.18) !important;
+  }
+}
+
+/* =====================================================
+   FIX 2 — Safe text wrapping
+   Prevents letter-by-letter breaking, clipping and
+   horizontal overflow inside page content and cards,
+   while wrapping at natural word boundaries. Minimal and
+   layout-preserving.
+   ===================================================== */
+main,
+main p,
+main h1, main h2, main h3, main h4, main h5, main h6,
+main span, main a, main li, main button, main article {
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+  white-space: normal;
+}
+
+/* Flex/grid children need min-width:0 or their text forces overflow instead
+   of wrapping — the common cause of clipped/letter-broken text in cards. */
+main .flex > *,
+main .grid > * {
+  min-width: 0;
+}
+
+/* Keep intentionally single-line labels (icons + tag rows) from being forced
+   to wrap by the rule above. */
+main .whitespace-nowrap {
+  white-space: nowrap !important;
+}

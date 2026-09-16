@@ -8,6 +8,7 @@ import EpicDetailPage from './components/EpicDetailPage'
 import FestivalsPage from './components/FestivalsPage'
 import InvalidRoutePage from './components/InvalidRoutePage'
 import { useReducedMotion } from './hooks/useReducedMotion'
+import { LanguageProvider } from './i18n'
 import { ExplorePage, ShastraPage, TirthaPage, ItihasaPage, PuranaPage, DevataPage, SmritiPage, YoungSeekersPage, VerifyPage, DharmaPage, SciencePage } from './components/ChamberPage'
 
 function getRoute(): { route: string; invalid: boolean } {
@@ -64,25 +65,29 @@ export default function App() {
       }
     })()
     return (
-      <div className="min-h-screen w-full bg-void text-gold-200 relative">
-        <GlobalCosmos3D reducedMotion={reducedMotion} />
-        <Navbar />
-        {page}
-        <Footer />
-        <Fullscreen3DModal isOpen={fullscreenOrbitOpen} onClose={() => setFullscreenOrbitOpen(false)} reducedMotion={reducedMotion} onToggleReducedMotion={setReducedMotion} onNavigate={navigate} />
-      </div>
+      <LanguageProvider>
+        <div className="min-h-screen w-full bg-void text-gold-200 relative">
+          <GlobalCosmos3D reducedMotion={reducedMotion} />
+          <Navbar />
+          {page}
+          <Footer />
+          <Fullscreen3DModal isOpen={fullscreenOrbitOpen} onClose={() => setFullscreenOrbitOpen(false)} reducedMotion={reducedMotion} onToggleReducedMotion={setReducedMotion} onNavigate={navigate} />
+        </div>
+      </LanguageProvider>
     )
   }
 
   return (
-    <div className="min-h-screen w-full bg-void text-gold-200 selection:bg-gold-500/30 selection:text-white relative">
-      <GlobalCosmos3D reducedMotion={reducedMotion} />
-      <Navbar />
-      <main className="relative z-10">
-        <HeroSection reducedMotion={reducedMotion} onNavigate={navigate} onOpenFullscreenOrbit={() => setFullscreenOrbitOpen(true)} />
-      </main>
-      <Footer />
-      <Fullscreen3DModal isOpen={fullscreenOrbitOpen} onClose={() => setFullscreenOrbitOpen(false)} reducedMotion={reducedMotion} onToggleReducedMotion={setReducedMotion} onNavigate={navigate} />
-    </div>
+    <LanguageProvider>
+      <div className="min-h-screen w-full bg-void text-gold-200 selection:bg-gold-500/30 selection:text-white relative">
+        <GlobalCosmos3D reducedMotion={reducedMotion} />
+        <Navbar />
+        <main className="relative z-10">
+          <HeroSection reducedMotion={reducedMotion} onNavigate={navigate} onOpenFullscreenOrbit={() => setFullscreenOrbitOpen(true)} />
+        </main>
+        <Footer />
+        <Fullscreen3DModal isOpen={fullscreenOrbitOpen} onClose={() => setFullscreenOrbitOpen(false)} reducedMotion={reducedMotion} onToggleReducedMotion={setReducedMotion} onNavigate={navigate} />
+      </div>
+    </LanguageProvider>
   )
 }

@@ -2,27 +2,31 @@ import { useEffect, useState } from 'react'
 import { ChevronDown, Globe2, Menu, Moon, Search, Sun, X } from 'lucide-react'
 import GlobalSearch from './GlobalSearch'
 import { PORTALS } from '../data/siteConfig'
+import { useLang, type Lang } from '../i18n'
 
-type Lang = 'system'|'en'|'te'|'hi'|'ta'|'kn'|'ml'|'mr'|'sa'
 type Theme = 'system'|'dark'|'light'
 const LANGS: { id: Lang; label: string }[] = [
   {id:'system',label:'System Default'}, {id:'en',label:'English'}, {id:'te',label:'తెలుగు'}, {id:'hi',label:'हिन्दी'}, {id:'ta',label:'தமிழ்'}, {id:'kn',label:'ಕನ್ನಡ'}, {id:'ml',label:'മലയാളം'}, {id:'mr',label:'मराठी'}, {id:'sa',label:'संस्कृत'},
 ]
+
+const NAV_LABEL: Record<string, string> = {
+  shastra: 'Śāstra', tirtha: 'Tīrtha', smriti: 'Smṛti', dharma: 'Dharma',
+  devata: 'Devatā', festivals: 'Festivals', verify: 'Aum Verify', 'young-seekers': 'Young Seekers',
+}
 
 // Top-level nav: Explore stays a dropdown (full portal list + search entries),
 // the rest are the 7 direct links requested — one flat row, no duplication.
 const TOP_LINKS = PORTALS.filter((p) => p.id !== 'devata')
 
 export default function Navbar() {
+  const { lang, setLang, t } = useLang()
   const [scrolled, setScrolled] = useState(false)
   const [menu, setMenu] = useState(false)
   const [explore, setExplore] = useState(false)
   const [search, setSearch] = useState(false)
-  const [lang, setLang] = useState<Lang>(() => (localStorage.getItem('aum-language') as Lang) || 'system')
   const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem('aum-theme') as Theme) || 'system')
 
   useEffect(() => { const f = () => setScrolled(window.scrollY > 18); window.addEventListener('scroll', f, {passive:true}); return () => window.removeEventListener('scroll', f) }, [])
-  useEffect(() => { localStorage.setItem('aum-language', lang); document.documentElement.lang = lang === 'system' ? (navigator.language || 'en') : lang }, [lang])
   useEffect(() => { localStorage.setItem('aum-theme', theme); document.documentElement.dataset.aumTheme = theme }, [theme])
 
   const go = (href: string) => {
@@ -43,15 +47,15 @@ export default function Navbar() {
 
         <div className="hidden lg:flex items-center gap-1">
           <div className="relative">
-            <button type="button" onClick={() => setExplore(v => !v)} className="flex items-center gap-1 px-3 py-2 font-display text-sm text-gold-100 hover:text-gold-300 transition">Explore <ChevronDown className={`w-3.5 h-3.5 transition ${explore ? 'rotate-180' : ''}`} /></button>
+            <button type="button" onClick={() => setExplore(v => !v)} className="flex items-center gap-1 px-3 py-2 font-display text-sm text-gold-100 hover:text-gold-300 transition">{t('Explore')} <ChevronDown className={`w-3.5 h-3.5 transition ${explore ? 'rotate-180' : ''}`} /></button>
             {explore && <div className="absolute left-0 top-11 w-72 rounded-2xl border border-gold-500/20 bg-[#05060c]/96 backdrop-blur-xl p-2 shadow-2xl">
-              {PORTALS.map((p) => <button key={p.id} type="button" onClick={() => go(p.href)} className="w-full flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-gold-500/10 transition"><span className="font-display text-sm text-gold-100">{p.label}</span><span className="font-deva text-xs text-gold-500/70">{p.sanskrit}</span></button>)}
-              <button type="button" onClick={() => go('#explore')} className="mt-1 w-full rounded-xl border border-gold-500/15 px-3 py-2.5 text-left font-body text-xs text-gold-300 hover:bg-gold-500/10">Open full knowledge explorer →</button>
+              {PORTALS.map((p) => <button key={p.id} type="button" onClick={() => go(p.href)} className="w-full flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-gold-500/10 transition"><span className="font-display text-sm text-gold-100">{t(NAV_LABEL[p.id] ?? p.label)}</span><span className="font-deva text-xs text-gold-500/70">{p.sanskrit}</span></button>)}
+              <button type="button" onClick={() => go('#explore')} className="mt-1 w-full rounded-xl border border-gold-500/15 px-3 py-2.5 text-left font-body text-xs text-gold-300 hover:bg-gold-500/10">{t('Open full knowledge explorer →')}</button>
             </div>}
           </div>
           {TOP_LINKS.map((p) => (
             <button key={p.id} type="button" onClick={() => go(p.href)} className="px-3 py-2 font-display text-sm text-gold-100/85 hover:text-gold-300 transition whitespace-nowrap">
-              {p.label.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase())}
+              {t(NAV_LABEL[p.id] ?? p.label)}
             </button>
           ))}
         </div>
