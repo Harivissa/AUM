@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react'
-import { ArrowLeft, BookOpen, GitBranch, MapPin, ScrollText, Sparkles } from 'lucide-react'
+import { ArrowLeft, BookOpen, GitBranch, MapPin, ScrollText, Sparkles, Download, CheckCircle2, FileDown, ShieldCheck } from 'lucide-react'
 import { EPIC_LINEAGES, EpicLineage, FamilyNode } from '../data/epicLineages'
 import TiltCard3D from './TiltCard3D'
+import CharacterGallery from './CharacterGallery'
+import { downloadElementAsPdf, generateStructuredArticlePdf } from '../utils/pdfExport'
 
 const RAMAYANA_KANDAS = ['Bāla Kāṇḍa', 'Ayodhyā Kāṇḍa', 'Araṇya Kāṇḍa', 'Kiṣkindhā Kāṇḍa', 'Sundara Kāṇḍa', 'Yuddha Kāṇḍa', 'Uttara Kāṇḍa']
 const MAHABHARATA_PARVAS = ['Ādi', 'Sabhā', 'Vana', 'Virāṭa', 'Udyoga', 'Bhīṣma', 'Droṇa', 'Karṇa', 'Śalya', 'Sauptika', 'Strī', 'Śānti', 'Anuśāsana', 'Aśvamedhika', 'Āśramavāsika', 'Mausala', 'Mahāprasthānika', 'Svargārohaṇika']
@@ -119,35 +121,240 @@ export default function EpicDetailPage({ kind, onBack }: { kind: 'ramayana' | 'm
   const people = isRamayana ? RAMAYANA_PEOPLE : MAHABHARATA_PEOPLE
   const places = isRamayana ? ['Ayodhyā', 'Mithilā', 'Daṇḍakāraṇya', 'Kiṣkindhā', 'Laṅkā'] : ['Hastināpura', 'Indraprastha', 'Vāraṇāvata', 'Dvaitavana', 'Kurukṣetra', 'Dvārakā']
 
+  const [isExporting, setIsExporting] = useState(false)
+  const [exportSuccess, setExportSuccess] = useState(false)
+
+  const handleDownloadEpicPdf = async () => {
+    if (isExporting) return
+    setIsExporting(true)
+    setExportSuccess(false)
+
+    try {
+      const filename = `${title}_Source_Authenticated_Study_Dossier`
+      const targetId = 'epic-detail-study-content'
+
+      const success = await downloadElementAsPdf(targetId, filename, {
+        title: `${title} (${sanskrit})`,
+        chamberLabel: `Itihāsa Archival Chamber · ${title}`,
+        authorOrAttribution: author,
+        provenanceSource: 'Critical Edition Recensions (Baroda Oriental Institute / BORI Pune) & Valmiki Ramayana Samhita',
+      })
+
+      if (!success) {
+        // Fallback to structured document vector PDF generator
+        await generateStructuredArticlePdf(
+          {
+            title: `${title} (${sanskrit})`,
+            sanskritTitle: sanskrit,
+            category: 'Itihāsa Sacred Civilizational Epic',
+            statusOrPeriod: 'Critical Edition Source Recension',
+            attribution: author,
+            summary: isRamayana
+              ? 'The epic chronicle of Śrī Rāma, composed in 24,000 verses across seven Kāṇḍas. It constitutes the archetypal narrative of Dharma, truth (Satya), righteous kingship (Rājadharma), filial devotion, and the cosmic balance of universal justice.'
+              : 'The monumental civilizational epic in 100,000 verses across eighteen Parvas, containing the Bhagavad Gītā, exploring intricate moral quandaries, dynastic conflict, and universal duty.',
+            details: `Structural Architecture: Comprises ${sections.length} ${isRamayana ? 'Kāṇḍas' : 'Parvas'}: ${sections.join(', ')}.\n\nPrincipal Figures: ${people.join(', ')}.\n\nSacred Geography: ${places.join(', ')}.\n\nKey philosophical focus: ${isRamayana ? 'Rājadharma, Truth, Promise and Sacrifice, Devotion and Righteous conduct.' : 'Dharma under conflict, Duty, counsel and consequence, Gītā spiritual wisdom.'}`,
+            sourceNotes: 'Grounded in the critical edition consensus texts, Baroda Oriental Institute Critical Edition of Srimad Valmiki Ramayana, and canonical commentaries.',
+            provenance: 'Baroda Oriental Institute Critical Edition & Archival Manuscripts Repository',
+            keyPoints: sections.map((sec, idx) => ({
+              label: `${isRamayana ? 'Kāṇḍa' : 'Parva'} ${idx + 1}`,
+              text: `${sec} — Authentic structural division of the sacred text.`,
+            })),
+          },
+          filename
+        )
+      }
+
+      setExportSuccess(true)
+      setTimeout(() => setExportSuccess(false), 3000)
+    } catch (err) {
+      console.error('Failed to generate Epic PDF:', err)
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
   return (
     <main className="relative z-10 min-h-screen pt-28 pb-24 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        <button type="button" onClick={onBack} className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gold-500/20 bg-black/40 text-gold-300 font-body text-xs hover:bg-gold-500/10 transition"><ArrowLeft className="w-3.5 h-3.5" /> Return to AUM Universe</button>
+        {/* Navigation & Action Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={onBack}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gold-500/20 bg-black/40 text-gold-300 font-body text-xs hover:bg-gold-500/10 transition"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Return to AUM Universe
+          </button>
 
-        <header className="text-center max-w-4xl mx-auto mt-9">
-          <div className="flex justify-center items-center gap-3"><span className="h-px w-16 bg-gold-500/25" /><span className="font-deva text-2xl text-gold-400">ॐ</span><span className="h-px w-16 bg-gold-500/25" /></div>
-          <p className="mt-5 font-deva text-gold-400/80">{sanskrit}</p>
-          <h1 className="mt-1 font-display text-5xl sm:text-7xl font-semibold text-gold-100 text-glow">{title}</h1>
-          <p className="mt-4 font-body text-sm sm:text-base text-gold-200/65">{author}</p>
-          <p className="mt-5 max-w-2xl mx-auto font-body text-sm leading-relaxed text-gold-300/70">A dedicated AUM chamber for exploring the structure, figures, places, relationships and enduring Dharma questions of this Itihāsa.</p>
-        </header>
-
-        <div className="grid md:grid-cols-3 gap-4 mt-12">
-          <TiltCard3D intensity={5}><div className="rounded-2xl border border-gold-500/20 bg-black/45 p-5"><BookOpen className="w-5 h-5 text-gold-400" /><p className="mt-4 font-body text-[10px] uppercase tracking-[0.16em] text-gold-400">Structure</p><h3 className="font-display text-2xl text-gold-100 mt-1">{sections.length} {isRamayana ? 'Kāṇḍas' : 'Parvas'}</h3></div></TiltCard3D>
-          <TiltCard3D intensity={5}><div className="rounded-2xl border border-gold-500/20 bg-black/45 p-5"><Sparkles className="w-5 h-5 text-gold-400" /><p className="mt-4 font-body text-[10px] uppercase tracking-[0.16em] text-gold-400">Principal figures</p><h3 className="font-display text-2xl text-gold-100 mt-1">{people.length} indexed</h3></div></TiltCard3D>
-          <TiltCard3D intensity={5}><div className="rounded-2xl border border-gold-500/20 bg-black/45 p-5"><MapPin className="w-5 h-5 text-gold-400" /><p className="mt-4 font-body text-[10px] uppercase tracking-[0.16em] text-gold-400">Places</p><h3 className="font-display text-2xl text-gold-100 mt-1">{places.length} featured</h3></div></TiltCard3D>
+          {/* Download as PDF Button */}
+          <button
+            type="button"
+            onClick={handleDownloadEpicPdf}
+            disabled={isExporting}
+            title={`Download ${title} article and archival overview as PDF`}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body font-semibold transition-all shadow-lg ${
+              exportSuccess
+                ? 'bg-emerald-500/20 border border-emerald-400/60 text-emerald-300'
+                : 'bg-gold-500/15 hover:bg-gold-500/25 border border-gold-400/40 text-gold-100 hover:border-gold-300 active:scale-95'
+            }`}
+          >
+            {isExporting ? (
+              <>
+                <div className="w-3.5 h-3.5 border-2 border-gold-400 border-t-transparent rounded-full animate-spin" />
+                <span>Generating {title} PDF...</span>
+              </>
+            ) : exportSuccess ? (
+              <>
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>PDF Downloaded</span>
+              </>
+            ) : (
+              <>
+                <Download className="w-3.5 h-3.5 text-gold-400" />
+                <span>Download as PDF</span>
+              </>
+            )}
+          </button>
         </div>
 
-        <section className="mt-16">
-          <div className="flex items-end justify-between gap-4"><div><p className="font-body text-[10px] uppercase tracking-[0.18em] text-gold-400">Textual architecture</p><h2 className="font-display text-3xl sm:text-4xl text-gold-100 mt-1">{isRamayana ? 'Kāṇḍas' : 'Parvas'}</h2></div><ScrollText className="w-7 h-7 text-gold-400/50" /></div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">{sections.map((s, i) => <div key={s} className="rounded-2xl border border-gold-500/15 bg-black/40 p-4 hover:border-gold-400/45 transition"><span className="font-body text-[9px] text-gold-500/70">{String(i + 1).padStart(2, '0')}</span><h3 className="mt-2 font-display text-lg text-gold-100">{s}</h3></div>)}</div>
-        </section>
+        {/* Exportable Study Content Container */}
+        <div id="epic-detail-study-content" className="p-2 sm:p-4 rounded-3xl">
+          <header className="text-center max-w-4xl mx-auto mt-9">
+            <div className="flex justify-center items-center gap-3">
+              <span className="h-px w-16 bg-gold-500/25" />
+              <span className="font-deva text-2xl text-gold-400">ॐ</span>
+              <span className="h-px w-16 bg-gold-500/25" />
+            </div>
+            <p className="mt-5 font-deva text-gold-400/80">{sanskrit}</p>
+            <h1 className="mt-1 font-display text-5xl sm:text-7xl font-semibold text-gold-100 text-glow">
+              {title}
+            </h1>
+            <p className="mt-4 font-body text-sm sm:text-base text-gold-200/65">{author}</p>
+            <p className="mt-5 max-w-2xl mx-auto font-body text-sm leading-relaxed text-gold-300/70">
+              A dedicated AUM chamber for exploring the structure, figures, places, relationships and enduring Dharma questions of this Itihāsa.
+            </p>
 
-        <section className="mt-16"><div><p className="font-body text-[10px] uppercase tracking-[0.18em] text-gold-400">Living geography</p><h2 className="font-display text-3xl sm:text-4xl text-gold-100 mt-1">Places in the Itihāsa</h2></div><div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-3 mt-6">{places.map((p) => <div key={p} className="rounded-2xl border border-gold-500/15 bg-black/40 p-4"><MapPin className="w-4 h-4 text-gold-400" /><h3 className="mt-3 font-display text-lg text-gold-100">{p}</h3></div>)}</div></section>
+            {/* Offline Study Badge */}
+            <div className="inline-flex items-center gap-2 mt-4 px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/25 text-[11px] font-body text-gold-300">
+              <ShieldCheck className="w-3.5 h-3.5 text-gold-400" />
+              <span>Source-Authenticated Dossier · Baroda / BORI Critical Edition Standards</span>
+            </div>
+          </header>
 
-        <section className="mt-16"><p className="font-body text-[10px] uppercase tracking-[0.18em] text-gold-400">Interactive lineage</p><h2 className="font-display text-3xl sm:text-4xl text-gold-100 mt-1">Family & Relationship Tree</h2><p className="mt-3 max-w-3xl font-body text-sm leading-relaxed text-gold-300/65">This is a deliberately simplified relationship view of principal figures, not an exhaustive genealogy. Select a node to inspect its entry. The interactive tree is contained inside a fixed viewport so the page itself never scrolls sideways.</p><Lineage3D lineage={lineage} /></section>
+          <div className="grid md:grid-cols-3 gap-4 mt-12">
+            <TiltCard3D intensity={5}>
+              <div className="rounded-2xl border border-gold-500/20 bg-black/45 p-5">
+                <BookOpen className="w-5 h-5 text-gold-400" />
+                <p className="mt-4 font-body text-[10px] uppercase tracking-[0.16em] text-gold-400">Structure</p>
+                <h3 className="font-display text-2xl text-gold-100 mt-1">
+                  {sections.length} {isRamayana ? 'Kāṇḍas' : 'Parvas'}
+                </h3>
+              </div>
+            </TiltCard3D>
+            <TiltCard3D intensity={5}>
+              <div className="rounded-2xl border border-gold-500/20 bg-black/45 p-5">
+                <Sparkles className="w-5 h-5 text-gold-400" />
+                <p className="mt-4 font-body text-[10px] uppercase tracking-[0.16em] text-gold-400">Principal figures</p>
+                <h3 className="font-display text-2xl text-gold-100 mt-1">{people.length} indexed</h3>
+              </div>
+            </TiltCard3D>
+            <TiltCard3D intensity={5}>
+              <div className="rounded-2xl border border-gold-500/20 bg-black/45 p-5">
+                <MapPin className="w-5 h-5 text-gold-400" />
+                <p className="mt-4 font-body text-[10px] uppercase tracking-[0.16em] text-gold-400">Places</p>
+                <h3 className="font-display text-2xl text-gold-100 mt-1">{places.length} featured</h3>
+              </div>
+            </TiltCard3D>
+          </div>
 
-        <section className="mt-16 rounded-3xl border border-gold-500/20 bg-gradient-to-b from-[#100a25]/75 to-black/55 p-6 sm:p-8"><p className="font-body text-[10px] uppercase tracking-[0.18em] text-gold-400">Dharma questions</p><h2 className="font-display text-3xl text-gold-100 mt-1">What this chamber explores</h2><div className="grid md:grid-cols-3 gap-4 mt-6">{(isRamayana ? ['Rājadharma and duty', 'Truth, promise and sacrifice', 'Devotion, courage and righteous conduct'] : ['Dharma under conflict', 'Duty, counsel and consequence', 'Kṛṣṇa’s teaching to Arjuna']).map((x) => <div key={x} className="rounded-2xl border border-gold-500/15 bg-black/35 p-4 font-body text-sm text-gold-200/75">✦ {x}</div>)}</div></section>
+          <section className="mt-16">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="font-body text-[10px] uppercase tracking-[0.18em] text-gold-400">Textual architecture</p>
+                <h2 className="font-display text-3xl sm:text-4xl text-gold-100 mt-1">
+                  {isRamayana ? 'Kāṇḍas' : 'Parvas'}
+                </h2>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleDownloadEpicPdf}
+                  disabled={isExporting}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gold-500/25 bg-black/40 text-xs font-body text-gold-300 hover:text-gold-100 hover:border-gold-400 transition"
+                >
+                  <Download className="w-3.5 h-3.5 text-gold-400" />
+                  <span>Download Architecture PDF</span>
+                </button>
+                <ScrollText className="w-7 h-7 text-gold-400/50" />
+              </div>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+              {sections.map((s, i) => (
+                <div
+                  key={s}
+                  className="rounded-2xl border border-gold-500/15 bg-black/40 p-4 hover:border-gold-400/45 transition"
+                >
+                  <span className="font-body text-[9px] text-gold-500/70">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 className="mt-2 font-display text-lg text-gold-100">{s}</h3>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {isRamayana && <CharacterGallery />}
+
+          <section className="mt-16">
+            <div>
+              <p className="font-body text-[10px] uppercase tracking-[0.18em] text-gold-400">Living geography</p>
+              <h2 className="font-display text-3xl sm:text-4xl text-gold-100 mt-1">Places in the Itihāsa</h2>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-3 mt-6">
+              {places.map((p) => (
+                <div key={p} className="rounded-2xl border border-gold-500/15 bg-black/40 p-4">
+                  <MapPin className="w-4 h-4 text-gold-400" />
+                  <h3 className="mt-3 font-display text-lg text-gold-100">{p}</h3>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="mt-16">
+            <p className="font-body text-[10px] uppercase tracking-[0.18em] text-gold-400">Interactive lineage</p>
+            <h2 className="font-display text-3xl sm:text-4xl text-gold-100 mt-1">Family & Relationship Tree</h2>
+            <p className="mt-3 max-w-3xl font-body text-sm leading-relaxed text-gold-300/65">
+              This is a deliberately simplified relationship view of principal figures, not an exhaustive genealogy. Select a node to inspect its entry. The interactive tree is contained inside a fixed viewport so the page itself never scrolls sideways.
+            </p>
+            <Lineage3D lineage={lineage} />
+          </section>
+
+          <section className="mt-16 rounded-3xl border border-gold-500/20 bg-gradient-to-b from-[#100a25]/75 to-black/55 p-6 sm:p-8">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <p className="font-body text-[10px] uppercase tracking-[0.18em] text-gold-400">Dharma questions</p>
+                <h2 className="font-display text-3xl text-gold-100 mt-1">What this chamber explores</h2>
+              </div>
+              <button
+                type="button"
+                onClick={handleDownloadEpicPdf}
+                disabled={isExporting}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-gold-500/30 bg-gold-500/10 text-xs font-body text-gold-200 hover:text-gold-100 hover:border-gold-400 transition"
+              >
+                <Download className="w-3.5 h-3.5 text-gold-400" />
+                <span>Save Full Study Guide (PDF)</span>
+              </button>
+            </div>
+            <div className="grid md:grid-cols-3 gap-4 mt-6">
+              {(isRamayana
+                ? ['Rājadharma and duty', 'Truth, promise and sacrifice', 'Devotion, courage and righteous conduct']
+                : ['Dharma under conflict', 'Duty, counsel and consequence', 'Kṛṣṇa’s teaching to Arjuna']
+              ).map((x) => (
+                <div key={x} className="rounded-2xl border border-gold-500/15 bg-black/35 p-4 font-body text-sm text-gold-200/75">
+                  ✦ {x}
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
     </main>
   )

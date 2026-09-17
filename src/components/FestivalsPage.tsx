@@ -1,28 +1,134 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import {
   ArrowLeft,
   BookOpen,
   CalendarDays,
+  Check,
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
   Droplets,
-  HeartHandshake,
+  Flame,
+  HelpCircle,
   History,
   Info,
   Layers,
+  LayoutGrid,
   Leaf,
   MapPin,
-  ShieldCheck,
-  Sparkles,
-  Utensils,
-  HelpCircle,
-  Sun,
-  Flame,
   Moon,
+  ShieldCheck,
+  SlidersHorizontal,
+  Sparkles,
+  Sun,
+  Utensils,
 } from 'lucide-react'
 import { FESTIVALS, type Festival, type SourceCategory } from '../data/festivals'
 import { assetUrl } from '../utils/assetUrl'
 import { useLang } from '../i18n'
+
+import festivalDiyaImg from '../assets/images/festival_diya_1789619603081.jpg'
+import sacredTempleImg from '../assets/images/sacred_temple_1789619561869.jpg'
+import sriRamaImg from '../assets/images/sri_rama_portrait_1789647146866.jpg'
+import dharmaWheelImg from '../assets/images/dharma_wheel_1789619590191.jpg'
+import vedicManuscriptImg from '../assets/images/vedic_manuscript_1789619549504.jpg'
+import youngSeekerImg from '../assets/images/young_seeker_1789619627160.jpg'
+
+interface FestivalVisualConfig {
+  imageSrc: string
+  fallbackGlyph: string
+  accentColor: string
+  themeHint: string
+}
+
+function getFestivalVisualConfig(slug: string): FestivalVisualConfig {
+  switch (slug) {
+    case 'vinayaka-chavithi':
+      return {
+        imageSrc: 'media/ganesha_main.jpg',
+        fallbackGlyph: 'ॐ',
+        accentColor: 'from-amber-600/40 to-yellow-500/20',
+        themeHint: 'Bhadrapada · Vighnaharta',
+      }
+    case 'deepavali':
+      return {
+        imageSrc: festivalDiyaImg,
+        fallbackGlyph: 'दी',
+        accentColor: 'from-amber-500/40 to-orange-500/20',
+        themeHint: 'Kartika · Jyoti',
+      }
+    case 'maha-shivaratri':
+      return {
+        imageSrc: sacredTempleImg,
+        fallbackGlyph: 'शि',
+        accentColor: 'from-indigo-600/40 to-sky-500/20',
+        themeHint: 'Phalguna · Shivaratri',
+      }
+    case 'navaratri-dussehra':
+      return {
+        imageSrc: 'media/clay_murti.jpg',
+        fallbackGlyph: 'दुर्गा',
+        accentColor: 'from-rose-600/40 to-amber-500/20',
+        themeHint: 'Ashvina · Shakti',
+      }
+    case 'krishna-janmashtami':
+      return {
+        imageSrc: 'assets/young-seekers/krishna.png',
+        fallbackGlyph: 'कृ',
+        accentColor: 'from-sky-600/40 to-teal-500/20',
+        themeHint: 'Bhadrapada · Rohini',
+      }
+    case 'rama-navami':
+      return {
+        imageSrc: sriRamaImg,
+        fallbackGlyph: 'राम',
+        accentColor: 'from-yellow-600/40 to-amber-500/20',
+        themeHint: 'Chaitra · Maryada',
+      }
+    case 'holi':
+      return {
+        imageSrc: 'media/modaka_offering.jpg',
+        fallbackGlyph: 'हो',
+        accentColor: 'from-pink-600/40 to-purple-500/20',
+        themeHint: 'Phalguna · Vasantotsava',
+      }
+    case 'makar-sankranti-pongal':
+      return {
+        imageSrc: dharmaWheelImg,
+        fallbackGlyph: 'सूर्य',
+        accentColor: 'from-orange-600/40 to-yellow-500/20',
+        themeHint: 'Makara · Uttarayan',
+      }
+    case 'ugadi-gudi-padwa':
+      return {
+        imageSrc: 'media/ganesha_eco.jpg',
+        fallbackGlyph: 'यु',
+        accentColor: 'from-emerald-600/40 to-teal-500/20',
+        themeHint: 'Chaitra · Samvatsara',
+      }
+    case 'guru-purnima':
+      return {
+        imageSrc: vedicManuscriptImg,
+        fallbackGlyph: 'गुरु',
+        accentColor: 'from-amber-700/40 to-orange-500/20',
+        themeHint: 'Ashadha · Vyasa',
+      }
+    case 'raksha-bandhan':
+      return {
+        imageSrc: youngSeekerImg,
+        fallbackGlyph: 'रक्षा',
+        accentColor: 'from-red-600/40 to-rose-500/20',
+        themeHint: 'Shravana · Sneha',
+      }
+    default:
+      return {
+        imageSrc: 'media/clay_murti.jpg',
+        fallbackGlyph: 'ॐ',
+        accentColor: 'from-gold-600/40 to-amber-500/20',
+        themeHint: 'Living Tradition',
+      }
+  }
+}
 
 function SourceBadge({ category }: { category: SourceCategory }) {
   const styles: Record<SourceCategory, string> = {
@@ -44,6 +150,13 @@ function LocalImageFrame({ src, alt, caption, sourceInfo }: { src: string; alt: 
   const [loaded, setLoaded] = useState(false)
   const [error, setError] = useState(false)
 
+  useEffect(() => {
+    setLoaded(false)
+    setError(false)
+  }, [src])
+
+  const resolvedSrc = src.startsWith('http') || src.startsWith('/') || src.startsWith('data:') ? src : assetUrl(src)
+
   return (
     <div className="relative overflow-hidden rounded-3xl border border-gold-500/25 bg-black/60 shadow-xl group">
       {!loaded && !error && (
@@ -54,7 +167,7 @@ function LocalImageFrame({ src, alt, caption, sourceInfo }: { src: string; alt: 
       )}
       {!error ? (
         <img
-          src={assetUrl(src)}
+          src={resolvedSrc}
           alt={alt}
           onLoad={() => setLoaded(true)}
           onError={() => setError(true)}
@@ -76,10 +189,114 @@ function LocalImageFrame({ src, alt, caption, sourceInfo }: { src: string; alt: 
   )
 }
 
+interface FestivalSelectionCardProps {
+  festival: Festival
+  isSelected: boolean
+  onSelect: () => void
+  onKeyDown: (e: React.KeyboardEvent) => void
+  setCardRef: (el: HTMLButtonElement | null) => void
+}
+
+function FestivalSelectionCard({
+  festival,
+  isSelected,
+  onSelect,
+  onKeyDown,
+  setCardRef,
+}: FestivalSelectionCardProps) {
+  const [imgError, setImgError] = useState(false)
+  const config = getFestivalVisualConfig(festival.slug)
+  const rawSrc = config.imageSrc
+  const srcUrl = rawSrc.startsWith('/') || rawSrc.startsWith('http') || rawSrc.startsWith('data:') ? rawSrc : assetUrl(rawSrc)
+
+  return (
+    <button
+      type="button"
+      ref={setCardRef}
+      role="tab"
+      aria-selected={isSelected}
+      aria-controls="festival-content-panel"
+      tabIndex={0}
+      onClick={onSelect}
+      onKeyDown={onKeyDown}
+      className={`group relative flex flex-col text-left rounded-2xl border transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black overflow-hidden select-none cursor-pointer ${
+        isSelected
+          ? 'border-gold-400 ring-2 ring-gold-400/50 bg-gradient-to-b from-gold-500/20 via-black/80 to-black shadow-[0_0_22px_rgba(232,197,107,0.35)] -translate-y-1'
+          : 'border-gold-500/20 bg-black/45 hover:border-gold-400/40 hover:bg-black/65 hover:-translate-y-0.5 shadow-sm'
+      }`}
+    >
+      {/* Visual media banner */}
+      <div className="relative w-full h-24 sm:h-28 overflow-hidden bg-black/60">
+        {!imgError ? (
+          <img
+            src={srcUrl}
+            alt={festival.name}
+            loading="lazy"
+            onError={() => setImgError(true)}
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className={`w-full h-full flex flex-col items-center justify-center bg-gradient-to-br ${config.accentColor}`}>
+            <span className="font-deva text-2xl text-gold-200">{config.fallbackGlyph}</span>
+          </div>
+        )}
+
+        {/* Ambient gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+
+        {/* Active badge */}
+        {isSelected && (
+          <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-gold-400 text-black font-body text-[9px] sm:text-[10px] font-bold shadow-md">
+            <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[3]" />
+            <span>Selected</span>
+          </div>
+        )}
+
+        {/* Calendar / season micro-chip */}
+        <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between pointer-events-none">
+          <span className="font-body text-[9px] uppercase tracking-wider text-gold-200/90 bg-black/75 backdrop-blur-xs px-1.5 py-0.5 rounded border border-gold-400/25 truncate max-w-[90%]">
+            {config.themeHint}
+          </span>
+        </div>
+      </div>
+
+      {/* Card body: Festival Name & Sanskrit */}
+      <div className="p-3 sm:p-3.5 flex flex-col justify-between flex-1">
+        <div>
+          <h3
+            className={`font-display text-xs sm:text-sm font-bold leading-snug break-normal hyphens-none transition-colors ${
+              isSelected ? 'text-gold-200 font-extrabold' : 'text-gold-100 group-hover:text-gold-200'
+            }`}
+          >
+            {festival.name}
+          </h3>
+          <p className="font-deva text-xs text-gold-400/90 mt-1 truncate">
+            {festival.sanskrit}
+          </p>
+        </div>
+        <p className="font-body text-[10px] text-gold-300/60 mt-2 truncate">
+          {festival.alternateName.split('·')[0].trim()}
+        </p>
+      </div>
+
+      {/* Bottom active indicator line */}
+      <div
+        className={`h-0.5 w-full transition-all duration-300 ${
+          isSelected ? 'bg-gradient-to-r from-gold-400 via-amber-300 to-gold-400' : 'bg-transparent'
+        }`}
+      />
+    </button>
+  )
+}
+
 export default function FestivalsPage({ onBack, onNavigate }: { onBack: () => void; onNavigate: (href: string) => void }) {
   const { t } = useLang()
   const [selectedSlug, setSelectedSlug] = useState<string>('vinayaka-chavithi')
+  const [viewMode, setViewMode] = useState<'grid' | 'carousel'>('carousel')
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0)
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const cardRefs = useRef<Record<string, HTMLButtonElement | null>>({})
 
   const festival = FESTIVALS.find((f) => f.slug === selectedSlug) || FESTIVALS[0]
   const [selectedIconItem, setSelectedIconItem] = useState(
@@ -95,6 +312,34 @@ export default function FestivalsPage({ onBack, onNavigate }: { onBack: () => vo
       setSelectedIconItem(null)
     }
     setOpenFaqIndex(0)
+
+    // Smoothly scroll active card into view if in carousel mode
+    setTimeout(() => {
+      cardRefs.current[slug]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+    }, 50)
+  }
+
+  const handleKeyDownCard = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      const nextIdx = (index + 1) % FESTIVALS.length
+      const nextFest = FESTIVALS[nextIdx]
+      handleSelectFestival(nextFest.slug)
+      cardRefs.current[nextFest.slug]?.focus()
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      const prevIdx = (index - 1 + FESTIVALS.length) % FESTIVALS.length
+      const prevFest = FESTIVALS[prevIdx]
+      handleSelectFestival(prevFest.slug)
+      cardRefs.current[prevFest.slug]?.focus()
+    }
+  }
+
+  const scrollCards = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = direction === 'left' ? -320 : 320
+      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' })
+    }
   }
 
   return (
@@ -116,61 +361,163 @@ export default function FestivalsPage({ onBack, onNavigate }: { onBack: () => vo
           <span>{festival.name}</span>
         </div>
 
-        {/* Festival Selection Chips */}
-        <section className="mt-6">
-          <div className="flex items-center gap-2 mb-3">
-            <CalendarDays className="w-4 h-4 text-gold-400" />
-            <span className="font-body text-xs uppercase tracking-widest text-gold-400 font-semibold">
-              Select Festival (पर्व चयनम्)
-            </span>
-          </div>
-          <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-thin">
-            {FESTIVALS.map((fest) => {
-              const active = fest.slug === festival.slug
-              return (
+        {/* Festival Selection Section */}
+        <section className="mt-6 rounded-3xl border border-gold-500/20 bg-black/40 p-4 sm:p-6 shadow-xl" aria-label="Festival Selection">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-gold-500/15">
+            <div className="flex items-center gap-2.5">
+              <CalendarDays className="w-5 h-5 text-gold-400 shrink-0" />
+              <div>
+                <h2 className="font-display text-lg sm:text-xl font-bold text-gold-100 flex items-center gap-2 flex-wrap">
+                  <span>Select Festival</span>
+                  <span className="font-deva text-gold-400 text-sm font-normal">पर्व चयनम्</span>
+                </h2>
+                <p className="font-body text-xs text-gold-300/70">
+                  Choose an observance to explore its calendar context, sacred rituals, and traditions.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 self-end sm:self-auto">
+              {/* Carousel Scroll Buttons (active in carousel view) */}
+              {viewMode === 'carousel' && (
+                <div className="flex items-center gap-1 mr-1">
+                  <button
+                    type="button"
+                    onClick={() => scrollCards('left')}
+                    aria-label="Scroll left"
+                    className="p-1.5 rounded-full border border-gold-500/20 bg-black/50 text-gold-300 hover:bg-gold-500/15 hover:text-gold-100 hover:border-gold-400/40 transition"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollCards('right')}
+                    aria-label="Scroll right"
+                    className="p-1.5 rounded-full border border-gold-500/20 bg-black/50 text-gold-300 hover:bg-gold-500/15 hover:text-gold-100 hover:border-gold-400/40 transition"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
+              {/* View Mode Toggle: Grid or Carousel */}
+              <div className="flex items-center rounded-xl border border-gold-500/20 bg-black/50 p-0.5" role="group" aria-label="Selector layout view">
                 <button
-                  key={fest.slug}
-                  onClick={() => handleSelectFestival(fest.slug)}
-                  className={`px-4 py-2 rounded-full text-xs font-body whitespace-nowrap transition-all flex items-center gap-2 border ${
-                    active
-                      ? 'bg-gold-500/25 border-gold-400 text-gold-100 shadow-[0_0_12px_rgba(232,197,107,0.3)] font-semibold'
-                      : 'bg-black/40 border-gold-500/15 text-gold-300/70 hover:border-gold-400/40 hover:text-gold-100'
+                  type="button"
+                  onClick={() => setViewMode('carousel')}
+                  title="Carousel view"
+                  aria-pressed={viewMode === 'carousel'}
+                  className={`px-2.5 py-1 rounded-lg font-body text-xs flex items-center gap-1.5 transition ${
+                    viewMode === 'carousel'
+                      ? 'bg-gold-500/25 text-gold-100 font-semibold border border-gold-400/40 shadow-sm'
+                      : 'text-gold-300/60 hover:text-gold-100'
                   }`}
                 >
-                  <span className="font-deva text-xs opacity-75">{fest.sanskrit}</span>
-                  <span>{fest.name}</span>
+                  <SlidersHorizontal className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Carousel</span>
                 </button>
-              )
-            })}
-          </div>
-        </section>
-
-        {/* Hero Banner Section */}
-        <header className="relative mt-6 grid lg:grid-cols-[1.1fr_.9fr] gap-8 items-center rounded-[2.5rem] border border-gold-500/25 bg-gradient-to-b from-[#140c2b]/90 via-[#0a0718]/90 to-black/80 p-6 sm:p-10 shadow-2xl">
-          <div>
-            <span className="font-deva text-2xl text-gold-400">{festival.sanskrit}</span>
-            <p className="mt-2 font-body text-[10px] uppercase tracking-[.24em] text-gold-400 font-semibold">
-              {festival.season} · {festival.tithi}
-            </p>
-            <h1 className="mt-2 font-display text-4xl sm:text-6xl font-bold text-gold-100 text-glow">
-              {festival.name}
-            </h1>
-            <p className="mt-2 font-display text-xl sm:text-2xl italic text-gold-300">{festival.alternateName}</p>
-            <p className="mt-5 max-w-2xl font-body text-sm sm:text-base leading-relaxed text-gold-200/75">
-              {festival.summary}
-            </p>
-            <div className="mt-6 p-4 rounded-2xl bg-gold-950/40 border-l-4 border-gold-400 font-display text-base sm:text-lg italic text-gold-200/90 leading-relaxed">
-              "{festival.meaningToday}"
+                <button
+                  type="button"
+                  onClick={() => setViewMode('grid')}
+                  title="Grid view"
+                  aria-pressed={viewMode === 'grid'}
+                  className={`px-2.5 py-1 rounded-lg font-body text-xs flex items-center gap-1.5 transition ${
+                    viewMode === 'grid'
+                      ? 'bg-gold-500/25 text-gold-100 font-semibold border border-gold-400/40 shadow-sm'
+                      : 'text-gold-300/60 hover:text-gold-100'
+                  }`}
+                >
+                  <LayoutGrid className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Grid</span>
+                </button>
+              </div>
             </div>
           </div>
 
-          <LocalImageFrame
-            src={festival.slug === 'vinayaka-chavithi' ? 'media/ganesha_main.jpg' : 'media/clay_murti.jpg'}
-            alt={`${festival.name} celebration`}
-            caption={`${festival.name} — Living Tradition`}
-            sourceInfo="Source: AUM Sacred Traditions Archives · High-resolution media asset"
-          />
-        </header>
+          {/* Cards Display: Carousel or Grid */}
+          {viewMode === 'carousel' ? (
+            <div
+              ref={scrollContainerRef}
+              role="tablist"
+              aria-label="Festival observances carousel"
+              className="flex gap-3.5 overflow-x-auto py-2 px-1 scrollbar-thin snap-x snap-mandatory"
+            >
+              {FESTIVALS.map((fest, idx) => {
+                const active = fest.slug === festival.slug
+                return (
+                  <div key={fest.slug} className="min-w-[170px] max-w-[210px] sm:min-w-[195px] shrink-0 snap-start">
+                    <FestivalSelectionCard
+                      festival={fest}
+                      isSelected={active}
+                      onSelect={() => handleSelectFestival(fest.slug)}
+                      onKeyDown={(e) => handleKeyDownCard(e, idx)}
+                      setCardRef={(el) => {
+                        cardRefs.current[fest.slug] = el
+                      }}
+                    />
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <div
+              role="tablist"
+              aria-label="Festival observances grid"
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 py-2 px-1"
+            >
+              {FESTIVALS.map((fest, idx) => {
+                const active = fest.slug === festival.slug
+                return (
+                  <FestivalSelectionCard
+                    key={fest.slug}
+                    festival={fest}
+                    isSelected={active}
+                    onSelect={() => handleSelectFestival(fest.slug)}
+                    onKeyDown={(e) => handleKeyDownCard(e, idx)}
+                    setCardRef={(el) => {
+                      cardRefs.current[fest.slug] = el
+                    }}
+                  />
+                )
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* Main Content Area for the Single Selected Festival */}
+        <div
+          key={festival.slug}
+          id="festival-content-panel"
+          role="region"
+          aria-label={`${festival.name} Details`}
+          className="transition-opacity duration-300 ease-in-out"
+        >
+          {/* Hero Banner Section */}
+          <header className="relative mt-8 grid lg:grid-cols-[1.1fr_.9fr] gap-8 items-center rounded-[2.5rem] border border-gold-500/25 bg-gradient-to-b from-[#140c2b]/90 via-[#0a0718]/90 to-black/80 p-6 sm:p-10 shadow-2xl">
+            <div>
+              <span className="font-deva text-2xl text-gold-400">{festival.sanskrit}</span>
+              <p className="mt-2 font-body text-[10px] uppercase tracking-[.24em] text-gold-400 font-semibold">
+                {festival.season} · {festival.tithi}
+              </p>
+              <h1 className="mt-2 font-display text-4xl sm:text-6xl font-bold text-gold-100 text-glow">
+                {festival.name}
+              </h1>
+              <p className="mt-2 font-display text-xl sm:text-2xl italic text-gold-300">{festival.alternateName}</p>
+              <p className="mt-5 max-w-2xl font-body text-sm sm:text-base leading-relaxed text-gold-200/75">
+                {festival.summary}
+              </p>
+              <div className="mt-6 p-4 rounded-2xl bg-gold-950/40 border-l-4 border-gold-400 font-display text-base sm:text-lg italic text-gold-200/90 leading-relaxed">
+                "{festival.meaningToday}"
+              </div>
+            </div>
+
+            <LocalImageFrame
+              src={getFestivalVisualConfig(festival.slug).imageSrc}
+              alt={`${festival.name} celebration`}
+              caption={`${festival.name} — Living Tradition`}
+              sourceInfo="Source: AUM Sacred Traditions Archives · High-resolution media asset"
+            />
+          </header>
 
         {/* Overview & Seasonal / Calendar Context */}
         <section className="grid lg:grid-cols-3 gap-5 mt-8">
@@ -489,6 +836,7 @@ export default function FestivalsPage({ onBack, onNavigate }: { onBack: () => vo
             </div>
           </section>
         )}
+        </div>
       </div>
     </main>
   )
