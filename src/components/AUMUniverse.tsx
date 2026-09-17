@@ -186,12 +186,12 @@ function PortalNode({
 
       {hovered && <pointLight color={node.color} intensity={1.5} distance={2.5} />}
 
-      {/* Real Image Card Container with Clear Labels & Descriptions */}
+      {/* Real Image Card Container with Short Section Name & Sanskrit Label */}
       <Html center position={[0, 0.08, 0]} distanceFactor={8.5}>
         <div
           role="button"
           tabIndex={0}
-          aria-label={`${node.label} — ${node.description}`}
+          aria-label={`${node.label} (${node.sanskrit})`}
           onClick={(e) => {
             e.stopPropagation()
             onSelect()
@@ -232,26 +232,22 @@ function PortalNode({
             </div>
           </div>
 
-          {/* Sanskrit, Clear Label, and Description Badge */}
+          {/* Short Section Name Badge with Sanskrit underneath (No overlapping long descriptions) */}
           <div className="mt-1.5 flex flex-col items-center pointer-events-none">
-            <span className="font-deva text-[10px] text-gold-400/90 leading-none drop-shadow">
-              {node.sanskrit}
-            </span>
             <div
-              className={`mt-1 px-3 py-1 rounded-full border backdrop-blur-md whitespace-nowrap transition-all duration-200 ${
+              className={`px-2.5 py-0.5 rounded-full border backdrop-blur-md whitespace-nowrap transition-all duration-200 ${
                 hovered
-                  ? 'bg-black/90 border-gold-300 shadow-[0_0_14px_rgba(232,197,107,0.45)] scale-105'
-                  : 'bg-black/75 border-gold-400/35 shadow-sm'
+                  ? 'bg-black/90 border-gold-300 shadow-[0_0_14px_rgba(232,197,107,0.5)] scale-105'
+                  : 'bg-black/75 border-gold-400/40 shadow-[0_2px_8px_rgba(0,0,0,0.6)]'
               }`}
             >
               <span className="font-display text-[11px] sm:text-[12px] font-bold tracking-wide text-gold-100">
                 {node.label}
               </span>
-              <span className="mx-1 text-gold-400/60 text-[10px]">—</span>
-              <span className="font-body text-[10px] sm:text-[11px] text-gold-300/95 font-medium">
-                {node.description}
-              </span>
             </div>
+            <span className="font-deva text-[9px] sm:text-[10px] text-gold-400/85 leading-none mt-1 drop-shadow select-none">
+              {node.sanskrit}
+            </span>
           </div>
         </div>
       </Html>
