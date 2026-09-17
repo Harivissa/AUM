@@ -16,79 +16,71 @@ export default function HeroSection({ reducedMotion, onNavigate, onOpenFullscree
   const webglSupported = useWebGLSupport()
 
   return (
-    <section id="orbit" className="relative min-h-[100svh] overflow-hidden pt-24 sm:pt-28">
+    <section id="orbit" className="relative min-h-[100svh] overflow-x-hidden pt-20 sm:pt-24 pb-12 sm:pb-16 flex flex-col justify-center">
       <WaterfallBackdrop />
 
-      <div className="absolute inset-0 pointer-events-none">
-        {['ॐ','सत्यं','धर्मः','ज्ञानम्','ऋतम्','वेदाः','योगः','शान्तिः','आत्मा'].map((word, i) => (
-          <span key={`${word}-${i}`} className="absolute font-deva text-gold-100/[.10] text-xl select-none" style={{ left: `${7 + (i * 13) % 90}%`, top: `${18 + (i * 17) % 68}%`, animation: reducedMotion ? 'none' : `aumFloat ${10 + (i % 4)}s ease-in-out ${i * .4}s infinite` }}>{word}</span>
-        ))}
-      </div>
-
-      <div className="relative z-10 max-w-[1540px] mx-auto px-5 sm:px-8 lg:px-12 min-h-[calc(100svh-6rem)] grid lg:grid-cols-[.82fr_1.18fr] items-center gap-2 lg:gap-0">
-        <div className="relative z-20 max-w-2xl py-10 lg:py-0 lg:pr-4 xl:pr-10">
-          <div className="inline-flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-[.24em] text-gold-300 font-body">
-            <span className="h-px w-9 bg-gold-400/60" />
-            <span>{SITE.eyebrow}</span>
-            <span className="h-px w-9 bg-gold-400/60" />
+      <div className="relative z-10 w-full max-w-[1480px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-4 sm:py-6 lg:py-0 min-h-[calc(100svh-5.5rem)] grid grid-cols-1 lg:grid-cols-[0.88fr_1.12fr] items-center gap-8 lg:gap-6 xl:gap-8">
+        <div className="relative z-20 w-full max-w-xl mx-auto lg:mx-0 py-4 sm:py-6 lg:py-0">
+          <div className="inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full border border-gold-400/30 bg-black/40 backdrop-blur-md">
+            <span className="font-deva text-base text-gold-400 leading-none">ॐ</span>
+            <span className="h-3 w-px bg-gold-400/40" />
+            <span className="text-[10.5px] sm:text-xs uppercase tracking-[.22em] text-gold-200 font-body font-medium">{SITE.eyebrow}</span>
           </div>
 
-          <div className="mt-6 flex items-center gap-3">
-            <span className="font-deva text-3xl text-gold-400 text-glow">ॐ</span>
-            <span className="h-px w-24 bg-gradient-to-r from-gold-400/60 to-transparent" />
-          </div>
-
-          <h1 className="mt-4 font-display font-semibold tracking-[-.035em] leading-[.88] text-gold-50 text-[4.2rem] sm:text-[5.8rem] lg:text-[5.6rem] xl:text-[6.7rem] text-glow">
+          <h1 className="mt-4 sm:mt-5 font-display font-bold tracking-tight leading-[0.92] text-gold-50 text-4xl sm:text-5xl md:text-6xl lg:text-[4.8rem] xl:text-[5.8rem] text-glow break-normal">
             SANĀTANA
           </h1>
-          <h2 className="mt-4 font-display font-medium leading-[.98] text-[2rem] sm:text-[2.55rem] lg:text-[2.5rem] xl:text-[3rem] text-gold-300">
+          <h2 className="mt-2.5 sm:mt-3.5 font-display font-semibold leading-[1.08] text-xl sm:text-2xl md:text-3xl lg:text-[2.2rem] xl:text-[2.75rem] text-gold-300">
             A CIVILIZATION OF KNOWLEDGE
           </h2>
-          <p className="mt-5 font-display italic text-xl sm:text-2xl text-gold-100/90">
+          <p className="mt-3.5 sm:mt-4 font-display italic text-base sm:text-lg md:text-xl text-gold-200/90 leading-snug">
             {SITE.tagline}
           </p>
-          <p className="mt-5 max-w-xl font-body text-sm sm:text-[15px] leading-7 text-gold-100/65">
+          <p className="mt-3.5 sm:mt-4 max-w-xl font-body text-xs sm:text-sm md:text-[15px] leading-relaxed text-gold-200/80">
             {SITE.description}
           </p>
 
-          <div className="mt-7 flex flex-wrap gap-3">
-            <button type="button" onClick={() => onNavigate('#explore')} className="inline-flex items-center gap-2 rounded-full bg-gold-400 px-5 py-3 text-xs font-body font-semibold text-void shadow-[0_0_35px_rgba(232,197,107,.22)] hover:brightness-110 transition">
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button type="button" onClick={() => onNavigate('#explore')} className="inline-flex items-center gap-2 rounded-full bg-gold-400 px-5 py-3 text-xs font-body font-semibold text-void shadow-[0_0_35px_rgba(232,197,107,.25)] hover:brightness-110 transition">
               Enter AUM <ArrowRight className="w-4 h-4" />
             </button>
-            <button type="button" onClick={() => onNavigate('#shastra')} className="inline-flex items-center gap-2 rounded-full border border-gold-300/35 bg-black/35 px-5 py-3 text-xs font-body text-gold-100 hover:bg-gold-500/10 transition">
+            <button type="button" onClick={() => onNavigate('#shastra')} className="inline-flex items-center gap-2 rounded-full border border-gold-300/40 bg-black/45 px-5 py-3 text-xs font-body text-gold-100 hover:bg-gold-500/15 transition">
               <Search className="w-3.5 h-3.5" /> Explore Śāstra
             </button>
-            <button type="button" onClick={() => onNavigate('#verify')} className="inline-flex items-center gap-2 rounded-full border border-gold-500/20 bg-black/25 px-5 py-3 text-xs font-body text-gold-300/80 hover:text-gold-100 transition">
+            <button type="button" onClick={() => onNavigate('#verify')} className="inline-flex items-center gap-2 rounded-full border border-gold-500/30 bg-black/35 px-5 py-3 text-xs font-body text-gold-300 hover:text-gold-100 transition">
               <ShieldCheck className="w-3.5 h-3.5" /> AUM Verify
             </button>
           </div>
 
-          <div className="mt-8 flex items-center gap-3">
-            <div className="h-px w-12 bg-gold-400/30" />
-            <span className="font-deva text-sm sm:text-base text-gold-300/80">॥ यत्र विश्वं भवत्येकनीडम् ॥</span>
-            <div className="h-px w-12 bg-gold-400/30" />
+          <div className="mt-7 pt-4 border-t border-gold-500/20 max-w-lg">
+            <div className="flex items-center gap-2.5">
+              <span className="font-deva text-sm sm:text-base text-gold-300 font-medium">॥ यत्र विश्वं भवत्येकनीडम् ॥</span>
+              <span className="text-[11px] text-gold-400/80 font-body font-medium">— Yajurveda 32.8</span>
+            </div>
+            <p className="mt-1 font-body text-xs text-gold-300/70 italic">
+              "Where the entire universe meets in a single nest of shared knowledge and truth."
+            </p>
           </div>
-          <p className="mt-1 pl-16 font-body text-[10px] uppercase tracking-[.16em] text-gold-400/55">A poetic civilizational motif · source status should be shown when used as a quotation</p>
 
-          <div className="mt-8 flex items-center gap-2 text-gold-300/55">
+          <div className="mt-6 flex items-center gap-2 text-gold-300/60">
             <MousePointer2 className="w-3.5 h-3.5" />
-            <span className="font-body text-[10px] uppercase tracking-[.18em]">The 3D mandala is the navigation</span>
+            <span className="font-body text-[10px] uppercase tracking-[.18em]">The 3D mandala is the interactive navigation</span>
           </div>
         </div>
 
-        <div className="relative min-h-[520px] sm:min-h-[640px] lg:min-h-[760px] xl:min-h-[820px] -mr-3 sm:-mr-8 lg:-mr-14">
-          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_48%,rgba(232,197,107,.14),transparent_32%),radial-gradient(circle_at_70%_65%,rgba(255,255,255,.08),transparent_26%)]" />
-          <div className="absolute inset-0">
+        <div className="relative w-full max-w-[580px] sm:max-w-[640px] lg:max-w-none mx-auto h-[380px] sm:h-[460px] md:h-[520px] lg:h-[660px] xl:h-[760px] rounded-3xl overflow-hidden flex items-center justify-center">
+          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(232,197,107,.14),transparent_48%),radial-gradient(circle_at_70%_65%,rgba(255,255,255,.06),transparent_36%)]" />
+          <div className="absolute inset-0 w-full h-full overflow-hidden">
             {webglSupported ? (
               <Suspense fallback={<StaticFallback onNavigate={onNavigate} />}>
                 <AUMUniverse reducedMotion={reducedMotion} onNavigate={onNavigate} />
               </Suspense>
             ) : <StaticFallback onNavigate={onNavigate} />}
           </div>
-          <div className="absolute top-10 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full bg-black/45 border border-gold-500/20 backdrop-blur-md pointer-events-none">
-            <span className="font-body text-[9px] sm:text-[10px] uppercase tracking-[.22em] text-gold-400/80">Śāstra · Tīrtha · Itihāsa · Smṛti · Dharma</span>
+          <div className="absolute top-4 sm:top-6 left-1/2 -translate-x-1/2 z-20 px-3.5 sm:px-4 py-1.5 rounded-full bg-black/60 border border-gold-500/30 backdrop-blur-md pointer-events-none max-w-[90%] text-center">
+            <span className="font-body text-[8.5px] sm:text-[10px] uppercase tracking-[.2em] text-gold-300 font-medium whitespace-nowrap block truncate">Śāstra · Tīrtha · Itihāsa · Smṛti · Dharma</span>
           </div>
-          <button type="button" onClick={onOpenFullscreenOrbit} className="absolute bottom-9 left-1/2 -translate-x-1/2 z-20 rounded-full border border-gold-400/25 bg-black/55 backdrop-blur-md px-4 py-2 text-[10px] uppercase tracking-[.18em] text-gold-300 hover:bg-gold-500/10 transition">
+          <button type="button" onClick={onOpenFullscreenOrbit} className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 rounded-full border border-gold-400/30 bg-black/65 backdrop-blur-md px-4 py-2 text-[10px] uppercase tracking-[.18em] text-gold-200 hover:bg-gold-500/20 hover:text-white transition shadow-lg whitespace-nowrap">
             Open immersive universe ↗
           </button>
         </div>

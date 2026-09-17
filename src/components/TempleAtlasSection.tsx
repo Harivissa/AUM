@@ -7,7 +7,7 @@ export default function TempleAtlasSection() {
   const [selectedTemple, setSelectedTemple] = useState<Temple>(TEMPLES[0])
   const [activeFilter, setActiveFilter] = useState<string>('All')
 
-  const styles = ['All', 'Dravidian', 'Nagara', 'Kalinga', 'Rock-cut', 'Vesara']
+  const styles = ['All', 'Dravidian', 'Nagara', 'Kalinga', 'Rock-cut', 'Vesara', 'Himalayan Nagara']
   const filtered = activeFilter === 'All'
     ? TEMPLES
     : TEMPLES.filter(t => t.style === activeFilter)

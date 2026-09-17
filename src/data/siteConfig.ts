@@ -26,10 +26,10 @@ export const SEARCH_ENTRIES = [
   ['Tīrtha', 'Sacred geography and temple atlas', '#tirtha'],
   ['Smṛti', 'Tolerance, civilizational memory, difficult history and cultural survival', '#smriti'],
   ['Dharma', 'Dharma, Karma, Mokṣa, Puruṣārtha, Yoga, Bhakti and Jñāna', '#dharma'],
-  ['Devātā', 'Devas, Devīs, iconography, texts, festivals and traditions', '#devata'],
-  ['Festivals', 'Living Hindu observances with calendar context and distinct source categories', '#festivals'],
+  ['Devatā', 'Devas, Devīs, iconography, texts, festivals and traditions', '#devata'],
+  ['Festivals', '12 living Hindu observances with calendar context and distinct source categories', '#festivals'],
   ['Vināyaka Chavithi', 'Gaṇeśa Caturthī: calendar context, regional practice and source-aware notes', '#festivals'],
   ['Science & Knowledge', 'Historical Indian knowledge traditions with evidence-aware framing', '#science'],
   ['AUM Verify', 'Source-aware verification of Sanskrit and historical claims', '#verify'],
-  ['Young Seekers', 'A child-friendly learning universe — under construction', '#young-seekers'],
+  ['Young Seekers', 'Sacred stories, daily ślokas, kids Sanskrit lab, and dharmic values for families', '#young-seekers'],
 ] as const

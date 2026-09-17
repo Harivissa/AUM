@@ -66,7 +66,7 @@ export default function App() {
     })()
     return (
       <LanguageProvider>
-        <div className="min-h-screen w-full bg-void text-gold-200 relative">
+        <div className="min-h-screen w-full max-w-full bg-void text-gold-200 relative overflow-x-hidden">
           <GlobalCosmos3D reducedMotion={reducedMotion} />
           <Navbar />
           {page}
@@ -79,10 +79,10 @@ export default function App() {
 
   return (
     <LanguageProvider>
-      <div className="min-h-screen w-full bg-void text-gold-200 selection:bg-gold-500/30 selection:text-white relative">
+      <div className="min-h-screen w-full max-w-full bg-void text-gold-200 selection:bg-gold-500/30 selection:text-white relative overflow-x-hidden">
         <GlobalCosmos3D reducedMotion={reducedMotion} />
         <Navbar />
-        <main className="relative z-10">
+        <main className="relative z-10 w-full max-w-full overflow-x-hidden">
           <HeroSection reducedMotion={reducedMotion} onNavigate={navigate} onOpenFullscreenOrbit={() => setFullscreenOrbitOpen(true)} />
         </main>
         <Footer />

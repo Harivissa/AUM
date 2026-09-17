@@ -24,7 +24,7 @@ export default function Navbar() {
   const [menu, setMenu] = useState(false)
   const [explore, setExplore] = useState(false)
   const [search, setSearch] = useState(false)
-  const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem('aum-theme') as Theme) || 'system')
+  const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem('aum-theme') as Theme) || 'dark')
 
   useEffect(() => { const f = () => setScrolled(window.scrollY > 18); window.addEventListener('scroll', f, {passive:true}); return () => window.removeEventListener('scroll', f) }, [])
   useEffect(() => { localStorage.setItem('aum-theme', theme); document.documentElement.dataset.aumTheme = theme }, [theme])
@@ -76,8 +76,19 @@ export default function Navbar() {
         </div>
       </div>
       {menu && <div className="lg:hidden absolute right-4 sm:right-8 top-[68px] w-[min(92vw,390px)] rounded-2xl border border-gold-500/20 bg-[#05060c]/97 backdrop-blur-xl p-3 shadow-2xl">
-        <div className="grid grid-cols-2 gap-2">{PORTALS.map(p => <button key={p.id} onClick={() => go(p.href)} className="rounded-xl border border-gold-500/10 bg-black/25 p-3 text-left"><span className="block font-display text-sm text-gold-100">{p.label}</span><span className="font-deva text-xs text-gold-500/65">{p.sanskrit}</span></button>)}</div>
-        <button onClick={() => go('#explore')} className="mt-2 w-full rounded-xl bg-gold-400 py-2.5 font-body text-xs font-semibold text-void">Open Knowledge Explorer</button>
+        <div className="grid grid-cols-2 gap-2">{PORTALS.map(p => <button key={p.id} onClick={() => go(p.href)} className="rounded-xl border border-gold-500/10 bg-black/25 p-3 text-left"><span className="block font-display text-sm text-gold-100">{t(NAV_LABEL[p.id] ?? p.label)}</span><span className="font-deva text-xs text-gold-500/65">{p.sanskrit}</span></button>)}</div>
+        <button onClick={() => go('#explore')} className="mt-2 w-full rounded-xl bg-gold-400 py-2.5 font-body text-xs font-semibold text-void">{t('Open Knowledge Explorer')}</button>
+        <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-gold-500/15">
+          <div className="flex items-center gap-2 rounded-full border border-gold-500/20 bg-black/35 px-3 py-1.5">
+            <Globe2 className="w-3.5 h-3.5 text-gold-400 shrink-0" />
+            <select value={lang} onChange={e => setLang(e.target.value as Lang)} aria-label="Language" className="bg-transparent outline-none text-[11px] text-gold-100 cursor-pointer">
+              {LANGS.map(l => <option key={l.id} value={l.id} className="bg-[#080711]">{l.label}</option>)}
+            </select>
+          </div>
+          <div className="flex rounded-full border border-gold-500/20 bg-black/35 p-1">
+            {(['system','light','dark'] as Theme[]).map(t => <button key={t} type="button" onClick={() => setTheme(t)} className={`p-1.5 rounded-full ${theme === t ? 'bg-gold-400/20 text-gold-100' : 'text-gold-500/60 hover:text-gold-200'}`} aria-label={`${t} theme`}>{t==='light'?<Sun className="w-3.5 h-3.5"/>:t==='dark'?<Moon className="w-3.5 h-3.5"/>:<Globe2 className="w-3.5 h-3.5"/>}</button>)}
+          </div>
+        </div>
       </div>}
     </header>
     <GlobalSearch open={search} onClose={() => setSearch(false)} />

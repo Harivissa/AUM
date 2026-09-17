@@ -11,7 +11,10 @@ import AttacksOnHindusSection from './AttacksOnHindusSection'
 import LoveJihadSection from './LoveJihadSection'
 import YoungSeekersSection from './YoungSeekersSection'
 import type { ReactNode } from 'react'
+import { useState } from 'react'
 import { SCIENCE_KNOWLEDGE } from '../data/scienceKnowledge'
+import { DHARMA_CONCEPTS, SIX_DARSHANAS, FOUR_YOGAS, type Darshana, type YogaPath } from '../data/dharma'
+import { useLang } from '../i18n'
 
 const PURANAS = ['Brahma', 'Padma', 'Viṣṇu', 'Śiva', 'Bhāgavata', 'Nārada', 'Mārkaṇḍeya', 'Agni', 'Bhaviṣya', 'Brahmavaivarta', 'Liṅga', 'Varāha', 'Skanda', 'Vāmana', 'Kūrma', 'Matsya', 'Garuḍa', 'Brahmāṇḍa']
 const DEVATAS = [
@@ -24,14 +27,15 @@ const DEVATAS = [
 ]
 
 function PageFrame({ eyebrow, title, subtitle, onBack, children }: { eyebrow: string; title: string; subtitle: string; onBack: () => void; children: ReactNode }) {
+  const { t } = useLang()
   return <main className="relative z-10 min-h-screen pt-28 pb-24 px-4 sm:px-6">
     <div className="max-w-7xl mx-auto">
-      <button onClick={onBack} className="inline-flex items-center gap-2 rounded-full border border-gold-500/20 bg-black/45 px-4 py-2 font-body text-xs text-gold-300 hover:bg-gold-500/10 transition"><ArrowLeft className="w-3.5 h-3.5"/>Return to AUM Universe</button>
+      <button onClick={onBack} className="inline-flex items-center gap-2 rounded-full border border-gold-500/20 bg-black/45 px-4 py-2 font-body text-xs text-gold-300 hover:bg-gold-500/10 transition"><ArrowLeft className="w-3.5 h-3.5"/>{t('Return to AUM Universe')}</button>
       <header className="text-center max-w-4xl mx-auto mt-9">
         <div className="flex justify-center items-center gap-3"><span className="h-px w-16 bg-gold-500/25"/><span className="font-deva text-2xl text-gold-400">ॐ</span><span className="h-px w-16 bg-gold-500/25"/></div>
-        <p className="mt-5 font-body text-[10px] uppercase tracking-[0.22em] text-gold-400">{eyebrow}</p>
-        <h1 className="mt-2 font-display text-5xl sm:text-7xl font-semibold text-gold-100 text-glow">{title}</h1>
-        <p className="mt-4 max-w-3xl mx-auto font-body text-sm sm:text-base leading-relaxed text-gold-200/65">{subtitle}</p>
+        <p className="mt-5 font-body text-[10px] uppercase tracking-[0.22em] text-gold-400">{t(eyebrow, eyebrow)}</p>
+        <h1 className="mt-2 font-display text-3xl sm:text-5xl lg:text-6xl font-semibold text-gold-100 text-glow break-words">{t(title, title)}</h1>
+        <p className="mt-4 max-w-3xl mx-auto font-body text-sm sm:text-base leading-relaxed text-gold-200/65 break-words">{t(subtitle, subtitle)}</p>
       </header>
       {children}
     </div>
@@ -53,7 +57,18 @@ export function PuranaPage({ onBack }:{onBack:()=>void}) { return <PageFrame eye
 
 export function DevataPage({ onBack }:{onBack:()=>void}) { return <PageFrame eyebrow="DEVATĀ · देवता" title="Devas & Devīs" subtitle="A living index of Hindu forms of worship, traditions, iconography, texts, festivals and sacred places — presented with sampradāya context rather than flattening distinct traditions." onBack={onBack}><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-12">{DEVATAS.map(([name,sa,img,desc])=><TiltCard3D key={name} intensity={7}><article className="rounded-[1.7rem] border border-gold-500/20 bg-gradient-to-b from-[#120d25] to-black/70 overflow-hidden h-full">{img ? <div className="h-48 bg-[#f5efe4] flex items-center justify-center overflow-hidden"><img src={img} alt={name} className="w-full h-full object-contain" loading="lazy" onError={(event) => { event.currentTarget.parentElement?.classList.add('hidden') }} /></div> : null}<div className="p-6"><div className="w-12 h-12 rounded-full border border-gold-400/30 bg-gold-500/10 flex items-center justify-center font-deva text-xl text-gold-300">{sa.slice(0,1)}</div><p className="mt-5 font-deva text-sm text-gold-400">{sa}</p><h3 className="font-display text-2xl text-gold-100">{name}</h3><p className="mt-3 font-body text-sm leading-relaxed text-gold-200/65">{desc}</p><div className="mt-5 flex gap-2 flex-wrap"><span className="pill">Texts</span><span className="pill">Temples</span><span className="pill">Festivals</span></div></div></article></TiltCard3D>)}</div></PageFrame> }
 
-export function SmritiPage({ onBack }:{onBack:()=>void}) { return <PageFrame eyebrow="SMṚTI · स्मृति" title="Tolerance of Hindus" subtitle="Hindu civilizational memory includes pluralism and coexistence, as well as difficult chapters of violence, displacement, temple loss, resistance and cultural survival. AUM distinguishes historical records, traditional accounts, allegations and unresolved claims." onBack={onBack}><ToleranceSection/><SmritiSection/><AttacksOnHindusSection/><LoveJihadSection/></PageFrame> }
+export function SmritiPage({ onBack }:{onBack:()=>void}) {
+  return (
+    <PageFrame
+      eyebrow="SMṚTI · स्मृतिः · CIVILIZATIONAL MEMORY"
+      title="Hindu Civilizational History & Memory Archive"
+      subtitle="A rigorous, source-grounded digital archive documenting historical persecution, temple destruction, political-religious policies, resistance, cultural survival, colonial impacts, and modern documented challenges affecting Hindu communities."
+      onBack={onBack}
+    >
+      <SmritiSection />
+    </PageFrame>
+  )
+}
 export function YoungSeekersPage({ onBack }:{onBack:()=>void}) { return <PageFrame eyebrow="YOUNG SEEKERS · बाल साधक" title="A Little Universe for Young Minds" subtitle="A dedicated interactive space for children and young learners to discover stories, ślokas, Sanskrit, festivals, temples, values and the living traditions of Sanātana Dharma." onBack={onBack}><YoungSeekersSection/></PageFrame> }
 export function ExplorePage({ onBack }:{onBack:()=>void}) { return <PageFrame eyebrow="EXPLORE · अन्वेषण" title="AUM Knowledge Explorer" subtitle="Search and enter the interconnected domains of Śāstra, Devatā, Tīrtha, Itihāsa, Purāṇa, Dharma, Bhakti, Smṛti and source-aware inquiry." onBack={onBack}><ExploreSection/></PageFrame> }
 export function ShastraPage({ onBack, onOpenEpic }:{onBack:()=>void; onOpenEpic:(k:'ramayana'|'mahabharata')=>void}) { return <PageFrame eyebrow="ŚĀSTRA · शास्त्र" title="Scriptures & Śāstra" subtitle="Veda, Upaniṣad, Itihāsa, Purāṇa, Darśana, Gītā, Dharmaśāstra, Āgama, Mantra and Stotra — organised with source-aware descriptions." onBack={onBack}><ScripturesSection onOpenEpic={onOpenEpic}/></PageFrame> }
@@ -81,4 +96,143 @@ export function SciencePage({ onBack }:{onBack:()=>void}) {
   </PageFrame>
 }
 
-export function DharmaPage({ onBack }:{onBack:()=>void}) { return <PageFrame eyebrow="DHARMA · धर्म" title="Dharma, Yoga & Darśana" subtitle="Explore Dharma, Karma, Mokṣa, Puruṣārthas, Yoga, Jñāna, Bhakti, Sevā, Satya, Dāna, Tapas and the classical systems of Indian philosophy." onBack={onBack}><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-12">{DHARMA.map(([t,sa,d])=><TiltCard3D key={t} intensity={5}><article className="rounded-2xl border border-gold-500/15 bg-black/45 p-5 h-full"><p className="font-deva text-gold-400 text-sm">{sa}</p><h3 className="mt-1 font-display text-xl text-gold-100">{t}</h3><p className="mt-2 font-body text-xs leading-relaxed text-gold-300/60">{d}</p></article></TiltCard3D>)}</div><ToleranceSection/></PageFrame> }
+export function DharmaPage({ onBack }: { onBack: () => void }) {
+  const [activeTab, setActiveTab] = useState<'concepts' | 'darshanas' | 'yogas'>('concepts')
+  return (
+    <PageFrame
+      eyebrow="DHARMA · धर्म"
+      title="Dharma, Yoga & Darśana"
+      subtitle="Explore Ṛta, Puruṣārthas, Karma, the Six Darśana systems of classical Indian philosophy, and the Four Yogas with authentic scriptural citations."
+      onBack={onBack}
+    >
+      <div className="mt-8 flex justify-center gap-2 flex-wrap">
+        {[
+          { key: 'concepts', label: 'Core Principles (मूलसिद्धान्ताः)' },
+          { key: 'darshanas', label: 'Six Darśanas (षड्दर्शनानि)' },
+          { key: 'yogas', label: 'Four Yogas (चतुर्योगाः)' },
+        ].map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            onClick={() => setActiveTab(tab.key as any)}
+            className={`px-5 py-2 rounded-full text-xs font-body border transition ${
+              activeTab === tab.key
+                ? 'bg-gold-500/20 border-gold-400 text-gold-100 font-semibold shadow-md'
+                : 'bg-black/40 border-gold-500/15 text-gold-400/70 hover:text-gold-200'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'concepts' && (
+        <div className="space-y-6 mt-10">
+          <div className="grid md:grid-cols-2 gap-6">
+            {DHARMA_CONCEPTS.map((concept) => (
+              <article
+                key={concept.id}
+                className="p-6 sm:p-7 rounded-3xl border border-gold-500/20 bg-gradient-to-b from-[#140c2b]/90 to-black/60 shadow-xl flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between border-b border-gold-500/15 pb-3">
+                    <span className="font-deva text-gold-400 text-sm">{concept.sanskrit}</span>
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-gold-400/70">Dharmic Foundation</span>
+                  </div>
+                  <h3 className="mt-3 font-display text-2xl font-bold text-gold-100">{concept.title}</h3>
+                  <p className="mt-1 font-display text-sm italic text-gold-300">{concept.subtitle}</p>
+                  <p className="mt-4 font-body text-xs sm:text-sm text-gold-200/80 leading-relaxed">{concept.overview}</p>
+
+                  <div className="mt-5 space-y-2">
+                    {concept.keyPoints.map((pt, idx) => (
+                      <div key={idx} className="flex items-start gap-2 text-xs font-body text-gold-300/80">
+                        <span className="text-gold-400 font-bold">✦</span>
+                        <span>{pt}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {concept.scripturalQuote && (
+                    <div className="mt-5 p-4 rounded-2xl bg-gold-950/40 border border-gold-500/20">
+                      <p className="font-deva text-xs sm:text-sm text-gold-200 leading-relaxed">{concept.scripturalQuote.sanskrit}</p>
+                      <p className="mt-2 font-display text-xs italic text-gold-100/90 leading-relaxed">"{concept.scripturalQuote.english}"</p>
+                      <p className="mt-2 text-[10px] font-body text-gold-400/70 font-semibold">— {concept.scripturalQuote.source}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-5 pt-4 border-t border-gold-500/15 font-body text-xs text-emerald-300/80">
+                  <strong className="text-gold-400">Living Practice: </strong> {concept.practicalApplication}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'darshanas' && (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
+          {SIX_DARSHANAS.map((d: Darshana) => (
+            <article
+              key={d.name}
+              className="p-6 rounded-3xl border border-gold-500/20 bg-black/50 gold-glow-box-hover transition-all flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between border-b border-gold-500/15 pb-3">
+                  <span className="font-deva text-gold-400 text-sm">{d.sanskrit}</span>
+                  <span className="font-body text-[10px] uppercase text-gold-400/70">{d.founder}</span>
+                </div>
+                <h3 className="mt-3 font-display text-2xl font-bold text-gold-100">{d.name}</h3>
+                <p className="mt-1 font-body text-xs text-gold-300/80 italic font-semibold">Foundational Text: {d.text}</p>
+                <p className="mt-3 font-body text-xs leading-relaxed text-gold-200/75">{d.coreFocus}</p>
+
+                <div className="mt-4 pt-3 border-t border-gold-500/15">
+                  <span className="font-body text-[10px] uppercase tracking-wider text-gold-400 font-semibold block mb-1">Central Contribution</span>
+                  <p className="font-body text-xs text-gold-300/70 leading-relaxed">{d.contribution}</p>
+                </div>
+              </div>
+              <div className="mt-5 pt-3 border-t border-gold-500/15 font-body text-[11px] text-gold-400/80">
+                Pramāṇas (Epistemology): {d.epistemology.join(', ')}
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+
+      {activeTab === 'yogas' && (
+        <div className="grid md:grid-cols-2 gap-6 mt-10">
+          {FOUR_YOGAS.map((y: YogaPath) => (
+            <article
+              key={y.name}
+              className="p-7 rounded-3xl border border-gold-500/25 bg-gradient-to-b from-[#140c2b]/95 to-black/60 shadow-xl flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between border-b border-gold-500/15 pb-3">
+                  <span className="font-deva text-gold-400 text-sm">{y.sanskrit}</span>
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-gold-400/70">Gītā Core Path</span>
+                </div>
+                <h3 className="mt-3 font-display text-2xl sm:text-3xl font-bold text-gold-100">{y.name}</h3>
+                <p className="mt-1 font-display text-base italic text-gold-300">{y.path}</p>
+                <p className="mt-4 font-body text-sm text-gold-200/80 leading-relaxed">{y.essence}</p>
+
+                <div className="mt-5 p-4 rounded-2xl bg-gold-950/40 border border-gold-500/20">
+                  <p className="font-body text-xs text-gold-300/80 font-semibold mb-1">Key Scriptural Texts:</p>
+                  <p className="font-body text-xs text-gold-100">{y.keyTexts.join(' · ')}</p>
+                </div>
+              </div>
+
+              <div className="mt-5 pt-4 border-t border-gold-500/15 font-body text-xs text-emerald-300/80">
+                <strong className="text-gold-400">Practical Daily Cultivation: </strong> {y.practice}
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-16">
+        <ToleranceSection />
+      </div>
+    </PageFrame>
+  )
+}
+
