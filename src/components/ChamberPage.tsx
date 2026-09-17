@@ -10,6 +10,7 @@ import SmritiSection from './SmritiSection'
 import AttacksOnHindusSection from './AttacksOnHindusSection'
 import LoveJihadSection from './LoveJihadSection'
 import YoungSeekersSection from './YoungSeekersSection'
+import TirthaFloatingDecorations from './TirthaFloatingDecorations'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { SCIENCE_KNOWLEDGE } from '../data/scienceKnowledge'
@@ -26,10 +27,11 @@ const DEVATAS = [
   ['Sūrya','सूर्य','', 'The solar deity, honoured through Vedic hymns, worship and practices such as Sūrya Namaskāra.'],
 ]
 
-function PageFrame({ eyebrow, title, subtitle, onBack, children }: { eyebrow: string; title: string; subtitle: string; onBack: () => void; children: ReactNode }) {
+function PageFrame({ eyebrow, title, subtitle, onBack, decorations, children }: { eyebrow: string; title: string; subtitle: string; onBack: () => void; decorations?: ReactNode; children: ReactNode }) {
   const { t } = useLang()
-  return <main className="relative z-10 min-h-screen pt-28 pb-24 px-4 sm:px-6">
-    <div className="max-w-7xl mx-auto">
+  return <main className="relative z-10 min-h-screen pt-28 pb-24 px-4 sm:px-6 overflow-hidden">
+    {decorations}
+    <div className="max-w-7xl mx-auto relative z-10">
       <button onClick={onBack} className="inline-flex items-center gap-2 rounded-full border border-gold-500/20 bg-black/45 px-4 py-2 font-body text-xs text-gold-300 hover:bg-gold-500/10 transition"><ArrowLeft className="w-3.5 h-3.5"/>{t('Return to AUM Universe')}</button>
       <header className="text-center max-w-4xl mx-auto mt-9">
         <div className="flex justify-center items-center gap-3"><span className="h-px w-16 bg-gold-500/25"/><span className="font-deva text-2xl text-gold-400">ॐ</span><span className="h-px w-16 bg-gold-500/25"/></div>
@@ -72,7 +74,19 @@ export function SmritiPage({ onBack }:{onBack:()=>void}) {
 export function YoungSeekersPage({ onBack }:{onBack:()=>void}) { return <PageFrame eyebrow="YOUNG SEEKERS · बाल साधक" title="A Little Universe for Young Minds" subtitle="A dedicated interactive space for children and young learners to discover stories, ślokas, Sanskrit, festivals, temples, values and the living traditions of Sanātana Dharma." onBack={onBack}><YoungSeekersSection/></PageFrame> }
 export function ExplorePage({ onBack }:{onBack:()=>void}) { return <PageFrame eyebrow="EXPLORE · अन्वेषण" title="AUM Knowledge Explorer" subtitle="Search and enter the interconnected domains of Śāstra, Devatā, Tīrtha, Itihāsa, Purāṇa, Dharma, Bhakti, Smṛti and source-aware inquiry." onBack={onBack}><ExploreSection/></PageFrame> }
 export function ShastraPage({ onBack, onOpenEpic }:{onBack:()=>void; onOpenEpic:(k:'ramayana'|'mahabharata')=>void}) { return <PageFrame eyebrow="ŚĀSTRA · शास्त्र" title="Scriptures & Śāstra" subtitle="Veda, Upaniṣad, Itihāsa, Purāṇa, Darśana, Gītā, Dharmaśāstra, Āgama, Mantra and Stotra — organised with source-aware descriptions." onBack={onBack}><ScripturesSection onOpenEpic={onOpenEpic}/></PageFrame> }
-export function TirthaPage({ onBack }:{onBack:()=>void}) { return <PageFrame eyebrow="TĪRTHA · तीर्थ" title="Sacred Geography" subtitle="Explore Hindu sacred places, temple traditions, architecture, festivals and historical context. Traditional significance is kept distinct from archaeological or inscriptional claims." onBack={onBack}><TempleAtlasSection/></PageFrame> }
+export function TirthaPage({ onBack }:{onBack:()=>void}) {
+  return (
+    <PageFrame
+      eyebrow="TĪRTHA · तीर्थ"
+      title="Sacred Geography"
+      subtitle="Explore Hindu sacred places, temple traditions, architecture, festivals and historical context. Traditional significance is kept distinct from archaeological or inscriptional claims."
+      onBack={onBack}
+      decorations={<TirthaFloatingDecorations />}
+    >
+      <TempleAtlasSection />
+    </PageFrame>
+  )
+}
 export function VerifyPage({ onBack }:{onBack:()=>void}) { return <PageFrame eyebrow="AUM VERIFY · सत्यापन" title="Read With Context. Ask Without Fear. Verify With Sources." subtitle="A source-aware interface for Sanskrit quotations, scripture claims, historical claims, temple claims and attributions. Unknown claims are never presented as verified." onBack={onBack}><AUMVerifySection/></PageFrame> }
 const DHARMA = [
  ['Dharma','धर्म','That which sustains order, duty, right conduct and the conditions of a flourishing life; its meaning is context-sensitive.'],

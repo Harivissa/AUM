@@ -62,65 +62,7 @@ function FloatingSacredGeometry({ reducedMotion }: { reducedMotion: boolean }) {
 
   return (
     <group ref={groupRef}>
-      {/* Upper Sacred Torus Knot (Pathways & Hero Area) */}
-      <Float speed={1.5} rotationIntensity={0.25} floatIntensity={0.35}>
-        <mesh position={[7, 2, -6]} rotation={[0.4, 0.2, 0]}>
-          <torusKnotGeometry args={[1.2, 0.18, 96, 16, 2, 3]} />
-          <meshStandardMaterial
-            color="#e8c56b"
-            emissive="#d8a94a"
-            emissiveIntensity={0.6}
-            wireframe
-            transparent
-            opacity={0.35}
-          />
-        </mesh>
-      </Float>
-
-      {/* Mid-Left Quantum Icosahedron (Science Bridge Area) */}
-      <Float speed={2} rotationIntensity={0.25} floatIntensity={0.4}>
-        <mesh position={[-8, -4, -8]} rotation={[0.2, 0.8, 0.3]}>
-          <icosahedronGeometry args={[1.8, 1]} />
-          <meshStandardMaterial
-            color="#c98bd0"
-            emissive="#8a4da8"
-            emissiveIntensity={0.5}
-            wireframe
-            transparent
-            opacity={0.3}
-          />
-        </mesh>
-      </Float>
-
-      {/* Right Crystalline Prism (AUM Verify Area) */}
-      <Float speed={1.8} rotationIntensity={0.25} floatIntensity={0.35}>
-        <mesh position={[8, -10, -7]} rotation={[0.6, 0.3, 0.9]}>
-          <octahedronGeometry args={[1.6, 0]} />
-          <meshStandardMaterial
-            color="#6fb7c9"
-            emissive="#3a8a9c"
-            emissiveIntensity={0.55}
-            wireframe
-            transparent
-            opacity={0.35}
-          />
-        </mesh>
-      </Float>
-
-      {/* Lower Sacred Golden Ring (Sadhana & Footer Area) */}
-      <Float speed={1.2} rotationIntensity={0.2} floatIntensity={0.3}>
-        <mesh position={[-6, -18, -6]} rotation={[Math.PI / 3, 0.4, 0]}>
-          <torusGeometry args={[2.2, 0.04, 16, 64]} />
-          <meshStandardMaterial
-            color="#f0833e"
-            emissive="#f0833e"
-            emissiveIntensity={0.8}
-            roughness={0.3}
-            transparent
-            opacity={0.45}
-          />
-        </mesh>
-      </Float>
+      {/* Atmospheric cosmic depth */}
 
 
       {/* Subtle floating Sanskrit — atmospheric depth, never interactive */}

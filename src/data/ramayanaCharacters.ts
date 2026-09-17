@@ -24,12 +24,12 @@ export const CHARACTER_CATEGORIES: CharacterCategoryMeta[] = [
   {
     id: 'all',
     name: {
-      en: 'All 25 Characters',
-      te: 'మొత్తం 25 పాత్రలు',
-      hi: 'सभी २५ पात्र',
-      sa: 'सर्वे २५ पात्राणि',
-      ta: 'அனைத்து 25 பாத்திரங்கள்',
-      kn: 'ಎಲ್ಲಾ ೨೫ ಪಾತ್ರಗಳು',
+      en: 'All 26 Characters',
+      te: 'మొత్తం 26 పాత్రలు',
+      hi: 'सभी २६ पात्र',
+      sa: 'सर्वे २६ पात्राणि',
+      ta: 'அனைத்து 26 பாத்திரங்கள்',
+      kn: 'ಎಲ್ಲಾ ೨೬ ಪಾತ್ರಗಳು',
     },
   },
   {
