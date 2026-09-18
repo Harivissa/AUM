@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Film, Globe2, Menu, Moon, Search, Sun, X } from 'lucide-react'
+import { Film, Globe2, Menu, Moon, Search, Sun, User, X } from 'lucide-react'
 import GlobalSearch from './GlobalSearch'
 import { useLang, type Lang } from '../i18n'
 
@@ -95,38 +95,67 @@ export default function Navbar({ onOpenIntro }: NavbarProps) {
             ))}
           </nav>
 
-          {/* Right Action Tools: Intro, Languages, Theme, Search, Hamburger */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            {/* Cinematic Intro Button */}
+          {/* Right Action Tools: Search pill, Language, Avatar, Intro, Theme, Hamburger */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Search Pill (matching reference image) */}
             <button
               type="button"
-              onClick={() => (onOpenIntro ? onOpenIntro() : (window.location.hash = 'intro'))}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gold-400/35 bg-gold-500/10 text-gold-200 hover:bg-gold-500/20 hover:text-white transition font-display text-xs whitespace-nowrap"
-              title="Watch Cinematic Intro"
+              onClick={() => setSearch(true)}
+              className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-gold-500/25 bg-black/45 text-gold-300/80 hover:border-gold-400/50 hover:text-gold-100 transition shadow-inner font-body text-xs"
+              aria-label="Search"
             >
-              <Film className="w-3.5 h-3.5 text-gold-400" />
-              <span className="hidden sm:inline">Intro</span>
+              <Search className="w-3.5 h-3.5 text-gold-400" />
+              <span>Search...</span>
             </button>
 
-            {/* Language Selector */}
-            <div className="flex items-center gap-1.5 rounded-full border border-gold-500/25 bg-black/40 px-2.5 py-1.5">
+            {/* Mobile Search Icon Button */}
+            <button
+              type="button"
+              onClick={() => setSearch(true)}
+              className="md:hidden p-2 rounded-full border border-gold-500/25 bg-black/40 text-gold-300 hover:text-gold-100 transition"
+              aria-label="Search"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+
+            {/* Language Selector (Globe + EN dropdown) */}
+            <div className="flex items-center gap-1.5 rounded-full border border-gold-500/25 bg-black/45 px-2.5 py-1.5">
               <Globe2 className="w-3.5 h-3.5 text-gold-400 shrink-0" />
               <select
                 value={lang}
                 onChange={(e) => setLang(e.target.value as Lang)}
                 aria-label="Select Language"
-                className="bg-transparent outline-none text-[11px] text-gold-100 cursor-pointer font-body"
+                className="bg-transparent outline-none text-[11px] font-semibold text-gold-200 cursor-pointer font-display uppercase tracking-wider"
               >
                 {LANGS.map((l) => (
                   <option key={l.id} value={l.id} className="bg-[#0a0815] text-gold-100">
-                    {l.label}
+                    {l.id.toUpperCase()} - {l.label}
                   </option>
                 ))}
               </select>
             </div>
 
+            {/* User Avatar Circle Icon */}
+            <div
+              className="hidden sm:flex w-8 h-8 rounded-full border border-gold-500/30 bg-gold-500/10 items-center justify-center text-gold-300"
+              title="AUM Seeker Profile"
+            >
+              <User className="w-4 h-4" />
+            </div>
+
+            {/* Cinematic Intro Button */}
+            <button
+              type="button"
+              onClick={() => (onOpenIntro ? onOpenIntro() : (window.location.hash = 'intro'))}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gold-400/35 bg-gold-500/15 text-gold-200 hover:bg-gold-500/25 hover:text-white transition font-display text-xs whitespace-nowrap"
+              title="Watch 7-Scene Intro"
+            >
+              <Film className="w-3.5 h-3.5 text-gold-400" />
+              <span className="hidden sm:inline">Intro</span>
+            </button>
+
             {/* Theme Toggle */}
-            <div className="hidden sm:flex rounded-full border border-gold-500/20 bg-black/40 p-1">
+            <div className="hidden lg:flex rounded-full border border-gold-500/20 bg-black/40 p-1">
               {(['dark', 'light'] as Theme[]).map((thm) => (
                 <button
                   key={thm}
@@ -141,16 +170,6 @@ export default function Navbar({ onOpenIntro }: NavbarProps) {
                 </button>
               ))}
             </div>
-
-            {/* Search Button */}
-            <button
-              type="button"
-              onClick={() => setSearch(true)}
-              className="p-2 rounded-full border border-gold-500/20 bg-black/40 text-gold-100 hover:bg-gold-500/15 transition"
-              aria-label="Search"
-            >
-              <Search className="w-4 h-4 text-gold-300" />
-            </button>
 
             {/* Mobile Hamburger Button */}
             <button

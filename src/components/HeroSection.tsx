@@ -1,92 +1,178 @@
-import { Suspense } from 'react'
-import { ArrowRight, MousePointer2, Search, ShieldCheck, Sparkles } from 'lucide-react'
-import AUMUniverse from './AUMUniverse'
-import StaticFallback from './StaticFallback'
-import WaterfallBackdrop from './WaterfallBackdrop'
-import { useWebGLSupport } from '../hooks/useWebGLSupport'
+import { ArrowRight, Compass, Search, ShieldCheck, Sparkles } from 'lucide-react'
+import CentralMandalaPortal from './CentralMandalaPortal'
+import templeBackdropImg from '../assets/images/sacred_temple_1789619561869.jpg'
 import { SITE } from '../data/siteConfig'
 
 interface HeroSectionProps {
   reducedMotion: boolean
   onNavigate: (href: string) => void
-  onOpenFullscreenOrbit: () => void
+  onOpenFullscreenOrbit?: () => void
 }
 
-export default function HeroSection({ reducedMotion, onNavigate, onOpenFullscreenOrbit }: HeroSectionProps) {
-  const webglSupported = useWebGLSupport()
-
+export default function HeroSection({ reducedMotion, onNavigate }: HeroSectionProps) {
   return (
-    <section id="orbit" className="relative min-h-[100svh] overflow-x-hidden pt-20 sm:pt-24 pb-12 sm:pb-16 flex flex-col justify-center">
-      <WaterfallBackdrop />
+    <div className="relative w-full overflow-x-hidden">
+      {/* =========================================================================
+          HERO BANNER: 3-COLUMN COMPOSITION MATCHING REFERENCE DESIGN
+          ========================================================================= */}
+      <section
+        id="orbit"
+        className="relative min-h-[100svh] pt-24 pb-16 flex flex-col justify-center overflow-hidden"
+      >
+        {/* Background: Majestic sunrise temple spires in mist from reference image */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+          <img
+            src={templeBackdropImg}
+            alt="Sacred temple sunrise panorama"
+            className="w-full h-full object-cover object-center brightness-[0.45] contrast-[1.08] scale-105"
+          />
+          {/* Subtle twilight, deep midnight blue, and golden mist overlays */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#02050b]/96 via-[#030612]/75 to-[#02050b]/96" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020409] via-transparent to-[#020409]/80" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(232,197,107,0.14),transparent_65%)]" />
+        </div>
 
-      <div className="relative z-10 w-full max-w-[1480px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-4 sm:py-6 lg:py-0 min-h-[calc(100svh-5.5rem)] grid grid-cols-1 lg:grid-cols-[0.88fr_1.12fr] items-center gap-8 lg:gap-6 xl:gap-8">
-        <div className="relative z-20 w-full max-w-xl mx-auto lg:mx-0 py-4 sm:py-6 lg:py-0">
-          <div className="inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full border border-gold-400/30 bg-black/40 backdrop-blur-md">
-            <span className="font-deva text-base text-gold-400 leading-none">ॐ</span>
-            <span className="h-3 w-px bg-gold-400/40" />
-            <span className="text-[10.5px] sm:text-xs uppercase tracking-[.22em] text-gold-200 font-body font-medium">{SITE.eyebrow}</span>
-          </div>
-
-          <h1 className="mt-4 sm:mt-5 font-display font-bold tracking-tight leading-[0.92] text-gold-50 text-4xl sm:text-5xl md:text-6xl lg:text-[4.8rem] xl:text-[5.8rem] text-glow break-normal">
-            SANĀTANA
-          </h1>
-          <h2 className="mt-2.5 sm:mt-3.5 font-display font-semibold leading-[1.08] text-xl sm:text-2xl md:text-3xl lg:text-[2.2rem] xl:text-[2.75rem] text-gold-300">
-            A CIVILIZATION OF KNOWLEDGE
-          </h2>
-          <p className="mt-3.5 sm:mt-4 font-display italic text-base sm:text-lg md:text-xl text-gold-200/90 leading-snug">
-            {SITE.tagline}
-          </p>
-          <p className="mt-3.5 sm:mt-4 max-w-xl font-body text-xs sm:text-sm md:text-[15px] leading-relaxed text-gold-200/80">
-            {SITE.description}
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-3">
-            <button type="button" onClick={() => onNavigate('#explore')} className="inline-flex items-center gap-2 rounded-full bg-gold-400 px-5 py-3 text-xs font-body font-semibold text-void shadow-[0_0_35px_rgba(232,197,107,.25)] hover:brightness-110 transition">
-              Enter AUM <ArrowRight className="w-4 h-4" />
-            </button>
-            <button type="button" onClick={() => onNavigate('#shastra')} className="inline-flex items-center gap-2 rounded-full border border-gold-300/40 bg-black/45 px-5 py-3 text-xs font-body text-gold-100 hover:bg-gold-500/15 transition">
-              <Search className="w-3.5 h-3.5" /> Explore Śāstra
-            </button>
-            <button type="button" onClick={() => onNavigate('#verify')} className="inline-flex items-center gap-2 rounded-full border border-gold-500/30 bg-black/35 px-5 py-3 text-xs font-body text-gold-300 hover:text-gold-100 transition">
-              <ShieldCheck className="w-3.5 h-3.5" /> AUM Verify
-            </button>
-          </div>
-
-          <div className="mt-7 pt-4 border-t border-gold-500/20 max-w-lg">
-            <div className="flex items-center gap-2.5">
-              <span className="font-deva text-sm sm:text-base text-gold-300 font-medium">॥ यत्र विश्वं भवत्येकनीडम् ॥</span>
-              <span className="text-[11px] text-gold-400/80 font-body font-medium">— Yajurveda 32.8</span>
+        {/* 3-Column Layout Container */}
+        <div className="relative z-10 w-full max-w-[1540px] mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[1fr_1.15fr_1fr] items-center gap-8 lg:gap-6 py-6">
+          
+          {/* =====================================================================
+              LEFT COLUMN: Branding, Title, Tagline
+              ===================================================================== */}
+          <div className="flex flex-col text-left space-y-4 max-w-xl mx-auto lg:mx-0">
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-gold-400/30 bg-black/50 backdrop-blur-md w-fit">
+              <span className="font-deva text-base text-gold-400 leading-none">ॐ</span>
+              <span className="h-3 w-px bg-gold-400/40" />
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-gold-200 font-display font-medium">
+                SANĀTANA · KNOWLEDGE · MEMORY
+              </span>
             </div>
-            <p className="mt-1 font-body text-xs text-gold-300/70 italic">
-              "Where the entire universe meets in a single nest of shared knowledge and truth."
+
+            <div>
+              <h1 className="font-display font-bold tracking-tight leading-[0.95] text-gold-50 text-4xl sm:text-5xl md:text-6xl xl:text-7xl text-glow">
+                SANĀTANA
+              </h1>
+              <h2 className="mt-2.5 font-display font-semibold leading-[1.1] text-xl sm:text-2xl md:text-3xl text-gold-300 tracking-wide">
+                A CIVILIZATION OF KNOWLEDGE
+              </h2>
+            </div>
+
+            <p className="font-display italic text-lg sm:text-xl text-gold-200/95 leading-relaxed">
+              “{SITE.tagline}”
             </p>
+
+            <p className="font-body text-xs sm:text-sm text-gold-300/80 leading-relaxed max-w-md">
+              A living digital knowledge system exploring Śāstra, sacred geography, civilizational memory, and eternal philosophical inquiry.
+            </p>
+
+            {/* Quick Action Buttons */}
+            <div className="pt-2 flex flex-wrap gap-2.5">
+              <button
+                type="button"
+                onClick={() => onNavigate('#explore')}
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-gold-400 to-amber-400 px-5 py-2.5 text-xs font-display font-bold text-void shadow-[0_0_25px_rgba(232,197,107,0.3)] hover:brightness-110 transition"
+              >
+                Enter AUM <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => onNavigate('#shastra')}
+                className="inline-flex items-center gap-2 rounded-full border border-gold-400/35 bg-black/50 px-4 py-2.5 text-xs font-display text-gold-200 hover:bg-gold-500/20 hover:text-white transition"
+              >
+                <Search className="w-3.5 h-3.5 text-gold-400" /> Śāstra
+              </button>
+              <button
+                type="button"
+                onClick={() => onNavigate('#verify')}
+                className="inline-flex items-center gap-2 rounded-full border border-gold-500/30 bg-black/40 px-4 py-2.5 text-xs font-display text-gold-300 hover:text-gold-100 transition"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-gold-400" /> AUM Verify
+              </button>
+            </div>
+
+            {/* Sacred Verse Citation */}
+            <div className="pt-4 border-t border-gold-500/20">
+              <div className="flex items-center gap-2">
+                <span className="font-deva text-xs sm:text-sm text-gold-300 font-medium">
+                  ॥ यत्र विश्वं भवत्येकनीडम् ॥
+                </span>
+                <span className="text-[10.5px] text-gold-400/70 font-body">— Yajurveda 32.8</span>
+              </div>
+              <p className="mt-1 font-body text-[11px] text-gold-300/65 italic">
+                "Where the entire universe meets in a single nest of shared knowledge and truth."
+              </p>
+            </div>
           </div>
 
-          <div className="mt-6 flex items-center gap-2 text-gold-300/60">
-            <MousePointer2 className="w-3.5 h-3.5" />
-            <span className="font-body text-[10px] uppercase tracking-[.18em]">The 3D mandala is the interactive navigation</span>
+          {/* =====================================================================
+              CENTER COLUMN: Central ॐ Interface & Surrounding Portals
+              - Static central ॐ (never moves, rotates, tilts, covered; NO orange ball)
+              - 7 surrounding portals (Śāstra, Tīrtha, Smṛti, Dharma, Festivals, Verify, Young Seekers)
+              ===================================================================== */}
+          <div className="flex flex-col items-center justify-center relative py-4">
+            <CentralMandalaPortal reducedMotion={reducedMotion} onNavigate={onNavigate} />
+            <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-gold-500/25 text-gold-300/80 font-body text-[10px] tracking-wider uppercase">
+              <Compass className="w-3 h-3 text-gold-400" />
+              <span>Select any portal to begin exploration</span>
+            </div>
           </div>
+
+          {/* =====================================================================
+              RIGHT COLUMN: Ancient Wisdom, Modern Access, Pillars
+              ===================================================================== */}
+          <div className="flex flex-col text-left lg:text-right space-y-5 max-w-xl mx-auto lg:ml-auto lg:mr-0">
+            <div className="space-y-1.5 font-display">
+              <p className="text-2xl sm:text-3xl font-bold text-gold-100">
+                Ancient Wisdom
+              </p>
+              <p className="text-xl sm:text-2xl font-semibold text-gold-300">
+                Modern Access
+              </p>
+              <p className="text-lg sm:text-xl text-gold-400 font-medium">
+                A Brighter Tomorrow
+              </p>
+            </div>
+
+            {/* Framed Divider Box: Knowledge | Culture | Dharma | Future */}
+            <div className="p-3.5 sm:p-4 rounded-2xl border border-gold-500/35 bg-black/60 backdrop-blur-md shadow-xl">
+              <div className="flex items-center justify-between text-xs sm:text-[13px] font-display font-semibold tracking-wider text-gold-200">
+                <span>Knowledge</span>
+                <span className="text-gold-500/50">|</span>
+                <span>Culture</span>
+                <span className="text-gold-500/50">|</span>
+                <span>Dharma</span>
+                <span className="text-gold-500/50">|</span>
+                <span>Future</span>
+              </div>
+            </div>
+
+            {/* Tagline */}
+            <div className="font-display text-xs sm:text-[13px] tracking-[0.25em] text-gold-300/85 uppercase font-medium">
+              EXPLORE · LEARN · QUESTION · PRESERVE
+            </div>
+
+            {/* Civilizational Commitments */}
+            <div className="space-y-2.5 pt-2 text-xs font-body text-gold-200/75">
+              <div className="flex items-start lg:justify-end gap-2">
+                <span>Source-Verified Manuscripts & Itihāsa</span>
+                <span className="text-gold-400 mt-0.5 font-bold">✓</span>
+              </div>
+              <div className="flex items-start lg:justify-end gap-2">
+                <span>Sacred Geography & Temple Architecture</span>
+                <span className="text-gold-400 mt-0.5 font-bold">✓</span>
+              </div>
+              <div className="flex items-start lg:justify-end gap-2">
+                <span>Living Festivals & Cultural Continuity</span>
+                <span className="text-gold-400 mt-0.5 font-bold">✓</span>
+              </div>
+            </div>
+          </div>
+
         </div>
+      </section>
 
-        <div className="relative w-full max-w-[580px] sm:max-w-[640px] lg:max-w-none mx-auto h-[380px] sm:h-[460px] md:h-[520px] lg:h-[660px] xl:h-[760px] rounded-3xl overflow-hidden flex items-center justify-center">
-          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(232,197,107,.14),transparent_48%),radial-gradient(circle_at_70%_65%,rgba(255,255,255,.06),transparent_36%)]" />
-          <div className="absolute inset-0 w-full h-full overflow-hidden">
-            {webglSupported ? (
-              <Suspense fallback={<StaticFallback onNavigate={onNavigate} />}>
-                <AUMUniverse reducedMotion={reducedMotion} onNavigate={onNavigate} />
-              </Suspense>
-            ) : <StaticFallback onNavigate={onNavigate} />}
-          </div>
-          <div className="absolute top-4 sm:top-6 left-1/2 -translate-x-1/2 z-20 px-3.5 sm:px-4 py-1.5 rounded-full bg-black/60 border border-gold-500/30 backdrop-blur-md pointer-events-none max-w-[90%] text-center">
-            <span className="font-body text-[8.5px] sm:text-[10px] uppercase tracking-[.2em] text-gold-300 font-medium whitespace-nowrap block truncate">Śāstra · Tīrtha · Itihāsa · Smṛti · Dharma</span>
-          </div>
-          <button type="button" onClick={onOpenFullscreenOrbit} className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 rounded-full border border-gold-400/30 bg-black/65 backdrop-blur-md px-4 py-2 text-[10px] uppercase tracking-[.18em] text-gold-200 hover:bg-gold-500/20 hover:text-white transition shadow-lg whitespace-nowrap">
-            Open immersive universe ↗
-          </button>
-        </div>
-      </div>
-
-      {/* Premium Explanation Section: What is AUM? */}
+      {/* =========================================================================
+          WHAT IS AUM? CIVILIZATIONAL SANCTUARY SECTION
+          ========================================================================= */}
       <section className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-24 border-t border-gold-500/20">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gold-500/10 border border-gold-500/20 text-gold-300 font-body text-xs uppercase tracking-widest font-semibold">
@@ -101,7 +187,7 @@ export default function HeroSection({ reducedMotion, onNavigate, onOpenFullscree
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="p-6 sm:p-7 rounded-3xl bg-black/45 border border-gold-500/20 backdrop-blur-md gold-glow-box-hover transition-all">
+          <div className="p-6 sm:p-7 rounded-3xl bg-black/45 border border-gold-500/20 backdrop-blur-md hover:border-gold-400/40 transition-all">
             <div className="w-10 h-10 rounded-2xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center font-deva text-gold-400 text-lg">
               ॐ
             </div>
@@ -111,7 +197,7 @@ export default function HeroSection({ reducedMotion, onNavigate, onOpenFullscree
             </p>
           </div>
 
-          <div className="p-6 sm:p-7 rounded-3xl bg-black/45 border border-gold-500/20 backdrop-blur-md gold-glow-box-hover transition-all">
+          <div className="p-6 sm:p-7 rounded-3xl bg-black/45 border border-gold-500/20 backdrop-blur-md hover:border-gold-400/40 transition-all">
             <div className="w-10 h-10 rounded-2xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center text-gold-400">
               <Search className="w-5 h-5" />
             </div>
@@ -121,7 +207,7 @@ export default function HeroSection({ reducedMotion, onNavigate, onOpenFullscree
             </p>
           </div>
 
-          <div className="p-6 sm:p-7 rounded-3xl bg-black/45 border border-gold-500/20 backdrop-blur-md gold-glow-box-hover transition-all">
+          <div className="p-6 sm:p-7 rounded-3xl bg-black/45 border border-gold-500/20 backdrop-blur-md hover:border-gold-400/40 transition-all">
             <div className="w-10 h-10 rounded-2xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center text-gold-400">
               <ShieldCheck className="w-5 h-5" />
             </div>
@@ -139,7 +225,9 @@ export default function HeroSection({ reducedMotion, onNavigate, onOpenFullscree
         </div>
       </section>
 
-      {/* Elegant "Explore the AUM Knowledge Universe" Section */}
+      {/* =========================================================================
+          EXPLORE THE AUM KNOWLEDGE UNIVERSE SECTION
+          ========================================================================= */}
       <section id="explore" className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-20 border-t border-gold-500/15">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <p className="font-body text-xs uppercase tracking-widest text-gold-400 font-semibold">Chambers of Discovery</p>
@@ -160,7 +248,7 @@ export default function HeroSection({ reducedMotion, onNavigate, onOpenFullscree
             { id: 'smriti', name: 'Smṛti', sa: 'स्मृतिः', desc: 'Tolerance, civilizational memory & history', href: '#smriti' },
             { id: 'dharma', name: 'Dharma', sa: 'धर्मः', desc: 'Duty, Karma, Mokṣa, Yoga & Darśanas', href: '#dharma' },
             { id: 'verify', name: 'AUM Verify', sa: 'प्रमाणम्', desc: 'Source-aware verification of Sanskrit claims', href: '#verify' },
-            { id: 'science', name: 'Science & Knowledge', sa: 'ज्ञानविज्ञान', desc: 'Ancient Indian knowledge traditions & evidence', href: '#science' },
+            { id: 'young-seekers', name: 'Young Seekers', sa: 'बाल साधक', desc: 'Stories, concepts & wisdom for the next generation', href: '#young-seekers' },
           ].map((portal) => (
             <button
               key={portal.id}
@@ -182,7 +270,6 @@ export default function HeroSection({ reducedMotion, onNavigate, onOpenFullscree
           ))}
         </div>
       </section>
-    </section>
+    </div>
   )
 }
-

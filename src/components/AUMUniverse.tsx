@@ -103,12 +103,9 @@ function CentralMandala() {
         <meshBasicMaterial color="#f3e3b3" transparent opacity={0.18} />
       </Torus>
 
-      {/* Soft ambient illumination - strictly NO orange glowing ball behind or around ॐ */}
-      <pointLight color="#e8c56b" intensity={2.2} distance={6} decay={2} />
-
-      {/* Central sacred ॐ symbol - perfectly centered, static, unchanged */}
+      {/* Central sacred ॐ symbol - perfectly centered, static, unchanged, no glowing ball */}
       <Html center distanceFactor={8} style={{ pointerEvents: 'none' }}>
-        <div className="font-deva select-none text-[4.6rem] sm:text-[5.2rem] leading-none text-[#e8c56b] drop-shadow-[0_0_24px_rgba(232,197,107,.9)]">
+        <div className="font-deva select-none text-[4.6rem] sm:text-[5.2rem] leading-none text-[#e8c56b] drop-shadow-[0_0_16px_rgba(232,197,107,.5)]">
           ॐ
         </div>
       </Html>
