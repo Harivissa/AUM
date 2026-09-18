@@ -1,6 +1,6 @@
 {
-  "name": "ॐ AUM — Sanātana Knowledge System",
-  "description": "An immersive Sanātana Dharma knowledge system for Śāstra, Itihāsa, Tīrtha, Dharma, Bhakti, Smṛti and source-aware inquiry.",
+  "name": "AUM — Sanātana — A Civilization of Knowledge",
+  "description": "Where Science Ends, Sanātana Continues. A living knowledge system for Śāstra, Tīrtha, Smṛti, Dharma, Festivals, AUM Verify, and Young Seekers.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

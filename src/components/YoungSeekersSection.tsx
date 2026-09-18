@@ -2,17 +2,12 @@ import { useState } from 'react'
 import { assetUrl } from '../utils/assetUrl'
 import {
   BookOpen,
-  Gamepad2,
   Languages,
-  MapPin,
   Sparkles,
   Heart,
-  Shield,
   Star,
-  CheckCircle2,
-  ArrowRight,
-  Sun,
-  Smile,
+  Compass,
+  GraduationCap,
 } from 'lucide-react'
 import { useLang } from '../i18n'
 
@@ -23,6 +18,7 @@ interface KidsStory {
   moral: string
   narrative: string
   character: string
+  epic: 'Rāmāyaṇa' | 'Mahābhārata' | 'Purāṇa'
 }
 
 interface KidsSloka {
@@ -34,92 +30,147 @@ interface KidsSloka {
 
 const STORIES: KidsStory[] = [
   {
+    id: 'squirrel-setu',
+    title: 'The Little Squirrel and Rāma Setu',
+    sanskrit: 'सेतुबन्धने अनिलसिकता',
+    character: 'Little Squirrel',
+    epic: 'Rāmāyaṇa',
+    moral: 'No effort is too small when offered with pure heart and devotion.',
+    narrative:
+      'As the mighty Vānara army carried giant boulders to bridge the ocean to Laṅkā, a tiny squirrel rolled in sand, scurried onto the bridge, and shook the tiny grains between the stones. When others smiled at its smallness, Śrī Rāma gently scooped the squirrel into His palms and stroked its back with three divine fingers, blessing that every sincere effort is equally precious in noble work.',
+  },
+  {
+    id: 'arjuna-bird-eye',
+    title: 'Arjuna’s Unbroken Concentration',
+    sanskrit: 'लक्ष्यवेधैकचित्तता',
+    character: 'Arjuna & Droṇa',
+    epic: 'Mahābhārata',
+    moral: 'Unwavering focus on your noble goal cuts through every distraction.',
+    narrative:
+      'Guru Droṇācārya placed a wooden bird in a tree and tested the young princes. When asked what they saw, others named the tree, sky, and leaves. Only young Arjuna replied: "Gurudeva, I see neither the tree nor the branch nor the body of the bird; I see only the tiny eye of the bird." With pure focus, his arrow hit the mark flawlessly.',
+  },
+  {
     id: 'govardhana',
     title: 'Bāla Kṛṣṇa Lifts Govardhana Hill',
     sanskrit: 'गोवर्धनोद्धरणम्',
     character: 'Bāla Kṛṣṇa',
-    moral: 'True strength protects the vulnerable; reverence nature rather than pride.',
+    epic: 'Purāṇa',
+    moral: 'True strength protects the vulnerable; reverence nature rather than arrogance.',
     narrative:
-      'When torrential storms threatened the village of Gokula, young Kṛṣṇa lifted the mighty Govardhana Hill on the little finger of his left hand like an umbrella. He sheltered every cow, calf, bird, and villager for seven continuous days, teaching Indra that pride yields to loving protection.',
+      'When torrential storms threatened the village of Gokula, young Kṛṣṇa lifted the mighty Govardhana Hill on the little finger of his left hand like an umbrella. He sheltered every cow, calf, bird, and villager for seven continuous days, teaching that true leadership exists to serve and protect all life.',
   },
   {
     id: 'hanuman-leap',
-    title: 'Bāla Hanumān and the Golden Sun',
+    title: 'Bāla Hanumān and the Rising Sun',
     sanskrit: 'सूर्यबिम्बोद्गमः',
     character: 'Bāla Hanumān',
-    moral: 'Fearlessness in curiosity; dedicate boundless youthful energy to noble service.',
+    epic: 'Rāmāyaṇa',
+    moral: 'Fearless curiosity; dedicate youthful enthusiasm to noble service.',
     narrative:
-      'Seeing the rising morning sun glowing red and golden in the sky, baby Hanumān thought it was a sweet ripe mango! With boundless innocence and joy, he leapt into the sky. Blessed by all the Devas, he grew to understand that boundless energy is most sacred when offered to protect truth and dharma.',
+      'Seeing the dawn sun glowing red and golden in the sky, baby Hanumān believed it to be a sweet ripe mango! With childlike joy, he leapt towards the heavens. Blessed by all the sages and celestial deities, he grew up to realize that vast energy is divine when directed towards helping others and upholding truth.',
   },
   {
     id: 'ganesha-parents',
     title: 'Gaṇeśa Circumambulates His Parents',
     sanskrit: 'मातृपितृप्रदक्षिणा',
     character: 'Bāla Gaṇeśa',
-    moral: 'Wisdom recognizes that love and gratitude for parents encompasses the universe.',
+    epic: 'Purāṇa',
+    moral: 'Wisdom recognizes that love and gratitude for parents encompasses the cosmos.',
     narrative:
-      'When Śiva and Pārvatī announced a race around the entire universe to win the divine fruit of knowledge, Kārttikeya set off swiftly on his peacock. Little Gaṇeśa smiled, folded his hands, and walked reverently around his loving parents three times, saying: "My parents are the source of all my worlds." He won the fruit of supreme wisdom.',
+      'When challenged to race around the universe to receive a divine fruit of wisdom, Kārttikeya flew across the globe on his swift peacock. Little Gaṇeśa smiled, folded his hands, and walked reverently around his loving parents Śiva and Pārvatī three times: "My parents are the source of all my worlds." He received the fruit of supreme discernment.',
   },
   {
-    id: 'dhruva-star',
-    title: 'Dhruva’s Unshakable Determination',
-    sanskrit: 'ध्रुवस्य तपः',
-    character: 'Bhakta Dhruva',
-    moral: 'Steadfast concentration and sincerity overcome every worldly obstacle.',
+    id: 'jatayu-valor',
+    title: 'Jaṭāyu’s Supreme Courage',
+    sanskrit: 'जटायुषः शौर्यम्',
+    character: 'Jaṭāyu',
+    epic: 'Rāmāyaṇa',
+    moral: 'Stand up for righteousness even against overwhelming odds.',
     narrative:
-      'Young prince Dhruva was deeply hurt by unkind words, yet instead of weeping or seeking revenge, he ventured into the forest to seek Lord Viṣṇu with pure devotion. Guided by sage Nārada, he meditated with such unbroken focus that he was granted the eternal position of the North Star (Dhruva Tāra).',
+      'When Rāvaṇa carried away Sītā Devī, the elderly eagle king Jaṭāyu did not hesitate for a moment. Though aged, he flew bravely into the sky to fight the ten-headed tyrant to protect innocence. Śrī Rāma later held him with deep tears of reverence and personally performed his sacred final rites as a beloved father figure.',
   },
 ]
 
 const KIDS_SLOKAS: KidsSloka[] = [
   {
-    title: 'Morning Awakening (Before Stepping out of Bed)',
+    title: 'Morning Awakening (Looking upon Hands)',
     sanskrit: 'कराग्रे वसते लक्ष्मीः करमध्ये सरस्वती।\nकरमूले तु गोविन्दः प्रभाते करदर्शनम्॥',
     meaning:
-      'At the tip of the hands resides Lakṣmī (prosperity); in the middle sits Sarasvatī (knowledge); at the base rests Govinda (divine grace). Look upon your hands in the morning.',
-    benefit: 'Teaches children to respect their hands as sacred tools for honest work and study.',
+      'At the fingertips resides Lakṣmī (prosperity); in the palm sits Sarasvatī (knowledge); at the base rests Govinda (divine grace). Look upon your hands in the morning.',
+    benefit: 'Teaches young seekers to respect their hands as sacred instruments for honest work and kind deeds.',
   },
   {
-    title: 'Prayer for Learning (To Goddess Sarasvatī)',
+    title: 'Prayer for Daily Learning (Sarasvatī)',
     sanskrit: 'सरस्वति नमस्तुभ्यं वरदे कामरूपिणि।\nविद्यारम्भं करिष्यामि सिद्धिर्भवतु मे सदा॥',
     meaning:
-      'Salutations to Goddess Sarasvatī, bestower of boons. As I begin my studies today, may I always attain understanding and success.',
-    benefit: 'Inspires focus, humility, and eagerness to learn new knowledge every single day.',
+      'Salutations to Goddess Sarasvatī, giver of boons. As I begin my studies today, may I always attain deep understanding and goodness.',
+    benefit: 'Inspires focus, humility, and joy when opening school books or learning a new skill.',
   },
   {
-    title: 'Removing Obstacles (To Lord Gaṇeśa)',
+    title: 'Removing Obstacles (Lord Gaṇeśa)',
     sanskrit: 'वक्रतुण्ड महाकाय सूर्यकोटिसमप्रभ।\nनिर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा॥',
     meaning:
-      'O Lord with the curved trunk and immense form, radiant like millions of suns, make all my noble tasks free of obstacles, always.',
-    benefit: 'Instills confidence and calmness when starting a new school test, project, or journey.',
+      'O Lord with the curved trunk and immense form, radiant like millions of suns, make all noble tasks free of obstacles, always.',
+    benefit: 'Instills calmness and courage when facing difficult exams, sports, or unfamiliar challenges.',
   },
   {
-    title: 'Universal Peace & Well-being',
+    title: 'Universal Well-being & Peace',
     sanskrit: 'सर्वे भवन्तु सुखिनः सर्वे सन्तु निरामयाः।\nसर्वे भद्राणि पश्यन्तु मा कश्चिद्दुःखभाग्भवेत्॥',
     meaning:
-      'May all beings everywhere be happy. May all beings be free from illness. May all behold auspicious goodness. May no one suffer.',
-    benefit: 'Builds empathy, kindness, and universal goodwill for all living beings and nature.',
+      'May all beings everywhere be happy. May all beings be healthy. May all behold goodness. May no one suffer.',
+    benefit: 'Nurtures compassion and friendship with all living beings, birds, animals, and people.',
   },
 ]
 
 const SANSKRIT_KIDS_WORDS = [
-  { word: 'Gaja (गजः)', meaning: 'Elephant', icon: '🐘', funFact: 'Ganesha has the head of a Gaja, symbolizing vast memory and intelligence.' },
-  { word: 'Dhenu (धेनुः)', meaning: 'Sacred Cow', icon: '🐄', funFact: 'Honored in Sanātana Dharma as Gomātā, a symbol of selfless giving and gentle care.' },
-  { word: 'Mayūra (मयूरः)', meaning: 'Peacock', icon: '🦚', funFact: 'The vahana (mount) of Kārttikeya, adorned with divine feather crests.' },
-  { word: 'Kamala (कमलम्)', meaning: 'Lotus Flower', icon: '🪷', funFact: 'Rises pure and radiant from muddy pond water, teaching us to stay noble.' },
-  { word: 'Vṛkṣa (वृक्षः)', meaning: 'Tree', icon: '🌳', funFact: 'Gives shade and fruit to everyone without ever asking for a return.' },
-  { word: 'Mitra (मित्रम्)', meaning: 'Friend', icon: '🤝', funFact: 'Also one of the ancient Vedic names for the life-giving Sun.' },
+  { word: 'Gaja (गजः)', meaning: 'Elephant', icon: '🐘', funFact: 'Gaṇeśa has the form of a Gaja, symbolizing great wisdom, gentle strength, and deep memory.' },
+  { word: 'Dhenu (धेनुः)', meaning: 'Sacred Cow', icon: '🐄', funFact: 'Revered as Gomātā, a symbol of selfless motherly generosity and gentleness.' },
+  { word: 'Mayūra (मयूरः)', meaning: 'Peacock', icon: '🦚', funFact: 'The vahana (companion mount) of Kārttikeya, adorned with radiant feather crowns.' },
+  { word: 'Kamala (कमलम्)', meaning: 'Lotus Flower', icon: '🪷', funFact: 'Blooms pristine and bright above muddy water, reminding us to remain noble and cheerful.' },
+  { word: 'Vṛkṣa (वृक्षः)', meaning: 'Tree', icon: '🌳', funFact: 'Provides cool shade and sweet fruits to all without asking for anything in return.' },
+  { word: 'Mitra (मित्रम्)', meaning: 'Friend / Sun', icon: '🤝', funFact: 'In the Vedas, Mitra is both a trusted companion and the shining morning sun.' },
+]
+
+const GREAT_TEACHERS = [
+  {
+    name: 'Maharṣi Vālmīki',
+    sanskrit: 'महर्षि वाल्मीकिः',
+    title: 'The Ādikavi (First Poet)',
+    desc: 'Composed the original Rāmāyaṇa in 24,000 melodious ślokas, giving the world the highest ideals of truth, family love, and righteous conduct.',
+  },
+  {
+    name: 'Veda Vyāsa',
+    sanskrit: 'वेद व्यासः',
+    title: 'The Great Organizer of Wisdom',
+    desc: 'Organized the ancient Vedic hymns into four collections and gifted humanity the 100,000 verses of the Mahābhārata, including the Bhagavad Gītā.',
+  },
+  {
+    name: 'Gārgī Vācaknavī',
+    sanskrit: 'गार्गी वाचक्नवी',
+    title: 'Vedic Philosopher & Seeker',
+    desc: 'Renowned philosopher in King Janaka’s court who fearlessly questioned sage Yājñavalkya on the ultimate foundation of the cosmos in the Bṛhadāraṇyaka Upaniṣad.',
+  },
+  {
+    name: 'Āryabhaṭa',
+    sanskrit: 'आर्यभटः',
+    title: 'Astronomer & Mathematician',
+    desc: 'Calculated the value of Pi (π) to four decimal places and explained that the Earth rotates daily on its axis, over 1,500 years ago.',
+  },
+]
+
+const SACRED_SYMBOLS = [
+  { symbol: 'ॐ (AUM)', meaning: 'The primordial sound of the cosmos, representing waking, dream, and deep consciousness.' },
+  { symbol: 'Padma (Lotus)', meaning: 'Purity and spiritual blossoming, remaining clean above earthly waters.' },
+  { symbol: 'Dīpa (Sacred Lamp)', meaning: 'Light dispelling the darkness of ignorance, ignorance turned into knowledge.' },
+  { symbol: 'Dharma Cakra', meaning: 'The wheel of righteousness, cosmic order, and purposeful life.' },
+  { symbol: 'Kalaśa (Sacred Pot)', meaning: 'Abundance, life-giving water, and divine blessing filled with sacred leaves.' },
+  { symbol: 'Triśūla (Trident)', meaning: 'Balance of wisdom, willpower, and action (Jñāna, Icchā, Kriyā).' },
 ]
 
 export default function YoungSeekersSection() {
   const { t } = useLang()
   const [activeStoryIdx, setActiveStoryIdx] = useState(0)
-  const [activeTab, setActiveTab] = useState<'stories' | 'slokas' | 'sanskrit' | 'values'>('stories')
-  const [activeSlokaIdx, setActiveSlokaIdx] = useState(0)
-
-  // Kid quiz state
-  const [kidScore, setKidScore] = useState(0)
-  const [kidAnswered, setKidAnswered] = useState<number[]>([])
+  const [activeTab, setActiveTab] = useState<'stories' | 'slokas' | 'sanskrit' | 'values' | 'teachers' | 'symbols'>('stories')
 
   const currentStory = STORIES[activeStoryIdx]
 
@@ -148,7 +199,7 @@ export default function YoungSeekersSection() {
             <img
               src={assetUrl('assets/young-seekers/young-seekers-trio.png')}
               alt="Bāla Kṛṣṇa, Bāla Hanumān and Bāla Gaṇeśa together in a child-friendly sacred illustration"
-              className="relative block w-full h-auto object-cover max-h-[380px]"
+              className="relative block w-full h-auto object-cover max-h-[360px]"
               loading="eager"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent pointer-events-none" />
@@ -170,6 +221,8 @@ export default function YoungSeekersSection() {
             { key: 'slokas', label: 'Daily Ślokas', icon: Sparkles },
             { key: 'sanskrit', label: 'Sanskrit for Kids', icon: Languages },
             { key: 'values', label: 'Dharmic Values', icon: Heart },
+            { key: 'teachers', label: 'Great Thinkers', icon: GraduationCap },
+            { key: 'symbols', label: 'Sacred Symbols', icon: Compass },
           ].map((tab) => {
             const Icon = tab.icon
             const active = activeTab === tab.key
@@ -177,7 +230,7 @@ export default function YoungSeekersSection() {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as any)}
-                className={`px-5 py-2.5 rounded-full text-xs font-body whitespace-nowrap transition-all flex items-center gap-2 border ${
+                className={`px-4 py-2 rounded-full text-xs font-body whitespace-nowrap transition-all flex items-center gap-2 border ${
                   active
                     ? 'bg-gold-500/25 border-gold-400 text-gold-100 shadow-[0_0_12px_rgba(232,197,107,0.3)] font-semibold'
                     : 'bg-black/40 border-gold-500/15 text-gold-300/70 hover:border-gold-400/40 hover:text-gold-100'
@@ -211,8 +264,8 @@ export default function YoungSeekersSection() {
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-deva text-xs text-gold-400">{s.sanskrit}</span>
-                      <span className="font-body text-[10px] uppercase text-gold-400/60 font-semibold">
-                        {s.character}
+                      <span className="font-body text-[10px] uppercase px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-300 font-semibold">
+                        {s.epic}
                       </span>
                     </div>
                     <h4 className="font-display text-base font-bold mt-1 text-gold-100">{s.title}</h4>
@@ -222,8 +275,13 @@ export default function YoungSeekersSection() {
             </div>
 
             <div className="lg:col-span-8 p-6 sm:p-8 rounded-3xl border border-gold-400/35 bg-black/60 shadow-xl">
-              <span className="font-deva text-lg text-gold-400">{currentStory.sanskrit}</span>
-              <h3 className="font-display text-2xl sm:text-3xl font-bold text-gold-100 mt-1">
+              <div className="flex items-center justify-between">
+                <span className="font-deva text-lg text-gold-400">{currentStory.sanskrit}</span>
+                <span className="font-body text-xs text-gold-300 px-2.5 py-1 rounded-full border border-gold-500/20 bg-black/40">
+                  {currentStory.epic} · {currentStory.character}
+                </span>
+              </div>
+              <h3 className="font-display text-2xl sm:text-3xl font-bold text-gold-100 mt-2">
                 {currentStory.title}
               </h3>
               <div className="mt-4 p-4 rounded-2xl bg-gold-950/40 border-l-4 border-gold-400 font-display text-sm sm:text-base italic text-gold-200">
@@ -277,7 +335,7 @@ export default function YoungSeekersSection() {
             <div className="text-center max-w-xl mx-auto mb-6">
               <h3 className="font-display text-2xl font-bold text-gold-100">Simple Everyday Sanskrit Words</h3>
               <p className="mt-1 font-body text-xs text-gold-300/70">
-                Click and explore basic Sanskrit names for sacred animals, nature, and values.
+                Explore basic Sanskrit names for sacred animals, nature, and values.
               </p>
             </div>
 
@@ -324,6 +382,44 @@ export default function YoungSeekersSection() {
                 <div className="mt-4 pt-3 border-t border-gold-500/15 flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-wider text-gold-400">
                   <Star className="w-3 h-3 text-gold-400" /> Young Seeker Habit
                 </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Tab 5: GREAT THINKERS */}
+        {activeTab === 'teachers' && (
+          <div className="mt-8 grid sm:grid-cols-2 gap-5 relative z-10">
+            {GREAT_TEACHERS.map((teacher) => (
+              <div
+                key={teacher.name}
+                className="p-6 rounded-3xl border border-gold-500/25 bg-black/50 gold-glow-box-hover transition"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-deva text-sm text-gold-400 font-semibold">{teacher.sanskrit}</span>
+                  <span className="font-body text-[11px] text-gold-300 px-2.5 py-0.5 rounded-full bg-gold-500/10 border border-gold-500/20">
+                    {teacher.title}
+                  </span>
+                </div>
+                <h4 className="font-display text-xl font-bold text-gold-100 mt-2">{teacher.name}</h4>
+                <p className="mt-3 font-body text-xs sm:text-sm text-gold-200/80 leading-relaxed">
+                  {teacher.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Tab 6: SACRED SYMBOLS */}
+        {activeTab === 'symbols' && (
+          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
+            {SACRED_SYMBOLS.map((s) => (
+              <div
+                key={s.symbol}
+                className="p-5 rounded-2xl border border-gold-500/20 bg-black/45 gold-glow-box-hover transition"
+              >
+                <h4 className="font-display text-lg font-bold text-gold-300">{s.symbol}</h4>
+                <p className="mt-2 font-body text-xs text-gold-200/80 leading-relaxed">{s.meaning}</p>
               </div>
             ))}
           </div>

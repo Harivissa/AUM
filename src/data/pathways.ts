@@ -74,13 +74,13 @@ export const PATHWAYS: Pathway[] = [
   {
     id: 'kids', label: 'Young Seekers', sanskrit: 'बाल साधकाः', color: '#e8c56b', accentGlow: 'rgba(232,197,107,.35)', iconName: 'Sparkles',
     description: 'Stories, Sanskrit, ślokas, temples, festivals and values for young learners.',
-    longDescription: 'The Young Seekers chamber is designed for children and families, with carefully sourced stories, introductory Sanskrit, quizzes and visual learning.',
-    highlights: ['Bāla Kṛṣṇa', 'Bāla Hanumān', 'Bāla Gaṇeśa', 'Stories and quizzes'],
+    longDescription: 'The Young Seekers chamber is designed for children and families, with carefully sourced stories, introductory Sanskrit, sacred symbols, and visual learning.',
+    highlights: ['Bāla Kṛṣṇa', 'Bāla Hanumān', 'Bāla Gaṇeśa', 'Sacred stories & values'],
     keyVerse: { sanskrit: 'मातृदेवो भव । पितृदेवो भव । आचार्यदेवो भव ॥', transliteration: 'Mātṛdevo bhava | Pitṛdevo bhava | Ācāryadevo bhava.', meaning: 'Revere your mother as divine; your father as divine; your teacher as divine.', source: 'Taittirīya Upaniṣad 1.11.2' },
     topics: [
       { title: 'Stories', summary: 'Age-appropriate narratives drawn from Hindu textual and regional traditions, clearly identified by source.' },
       { title: 'Ślokas', summary: 'Short, correctly sourced passages with pronunciation, meaning and context.' },
-      { title: 'Learning', summary: 'Sanskrit, temples, festivals, symbols, values and quizzes are planned as modular activities.' },
+      { title: 'Learning', summary: 'Sanskrit, temples, festivals, symbols, and inspiring dharmic values curated for families.' },
     ],
   },
 ]
