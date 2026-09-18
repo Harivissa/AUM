@@ -86,10 +86,27 @@ export interface CommunityDirectoryItem {
   category: 'Temple' | 'Cultural Association' | 'Study Group' | 'Seva Organization' | 'Youth Group' | 'Sampradāya Community' | 'Language Community'
   country: string
   city: string
+  coordinates?: [number, number] // [lng, lat]
   foundedYear?: string
   traditionOrFocus: string
   description: string
   verifiedStatus: 'Verified' | 'Community Reported' | 'Under Review'
+}
+
+export interface GeoMigrationRoute {
+  id: string
+  eraId: 'ancient-ocean' | 'colonial-indenture' | 'modern-global'
+  eraTitle: string
+  title: string
+  timePeriod: string
+  origin: string
+  destination: string
+  waypoints: [number, number][] // [lat, lng] for Leaflet
+  vesselOrType?: string
+  significance: string
+  keyPortsOrStops: string[]
+  evidenceConfidence: ConfidenceLabel
+  sourcesSummary: string
 }
 
 export interface CommunityComment {
@@ -803,6 +820,308 @@ export const COUNTRIES_HINDU_DATA: CountryHinduProfile[] = [
       }
     ],
     sacredSitesOrInscriptions: ['Pancha Ishwarams (Koneswaram, Naguleswaram, Thiruketheeswaram, Munneswaram, Tondeswaram)', 'Ashok Vatika / Seetha Eliya']
+  },
+  {
+    id: 'kr',
+    name: 'South Korea',
+    sanskritName: 'दक्षिण-कोरियादेशः (कोरिया)',
+    region: 'East Asia',
+    coordinates: [127.76, 35.90],
+    estimatedPopulation: '25,000 - 30,000 (Resident Indian expatriate & student community, alongside significant historical-cultural affinity)',
+    percentageOfPopulation: '0.05%',
+    dataYear: '2023 Ministry of Justice ROK / Indian Embassy Seoul',
+    dataConfidence: 'Scholarly research',
+    dataSource: {
+      title: 'Korea Immigration Service Demographic Records & Gimhae Cultural Foundation',
+      authorOrBody: 'Ministry of Justice Republic of Korea & Cultural Heritage Administration',
+      yearOrPeriod: '2021-2023',
+      evidenceType: 'Census',
+      confidence: 'Scholarly research',
+      notes: 'Contemporary resident population based on official immigration reports. The traditional connection with Queen Heo Hwang-ok and Ayodhya is recognized as a living historical chronicle (*Samguk Yusa*) and diplomatic bond, distinguished from genetic or established archaeological fact.'
+    },
+    majorCities: ['Seoul (Haebangchon, Itaewon)', 'Busan', 'Incheon', 'Gimhae', 'Suwon'],
+    keyTemples: ['Sri Radha Shyamasundar Mandir (Seoul / Haebangchon)', 'Sri Sri Radha Kund Mandir (Pocheon)', 'Himalayan Meditation & Yoga Center (Seoul)', 'Queen Heo Hwang-ok Memorial Shrine & Park (Gimhae)'],
+    majorOrganizations: ['Indian Association Korea (IAK)', 'Korea-India Friendship Society', 'ISKCON Korea', 'Gimhae Kim Clan Association', 'Gimhae Cultural Foundation'],
+    historicalPresenceSummary: 'Contemporary Indian academic, technological, and medical community. Culturally, Korea shares a historic tradition recounted in the 13th-century chronicle Samguk Yusa: Princess Suriratna of "Ayuta" (traditionally associated with Ayodhya) arrived by boat in 48 CE to wed King Suro of Geumgwan Gaya, becoming Queen Heo Hwang-ok. AUM maintains academic balance by honoring this cherished living tradition and the Gimhae–Ayodhya sister-city alliance while clearly labeling it as historical tradition and literary chronicle rather than biological fact.',
+    migrationHistorySummary: '21st-century influx of researchers, engineers, university professors, and corporate professionals; enhanced by the 2001 Ayodhya-Gimhae sister-city pact and 2019 memorial park expansion.',
+    historicalKingdoms: [
+      {
+        name: 'Gaya Confederacy (Geumgwan Gaya - Traditional Literary Connection)',
+        period: 'c. 42 – 562 CE (Chronicle tradition)',
+        classification: 'Traditional or legendary connection',
+        capital: 'Gimhae (Gyeongsangnam-do)',
+        notableRulersOrSites: 'King Suro, Queen Heo Hwang-ok (Princess Suriratna of Ayuta), Pasa Stone Pagoda (Pasa Seoktap)',
+        primarySources: 'Samguk Yusa (Garakguk-gi chapter compiled by Monk Iryeon, c. 1281 CE)',
+        evidenceConfidence: 'Historical tradition'
+      }
+    ],
+    sacredSitesOrInscriptions: ['Queen Heo Memorial Park (Gimhae)', 'Tomb of King Suro and Queen Heo', 'Pasa Stone Pagoda (reputedly carried from Ayuta to calm sea waves)']
+  },
+  {
+    id: 'sg',
+    name: 'Singapore',
+    sanskritName: 'सिंहपुरम् (सिंगापुर)',
+    region: 'Southeast Asia',
+    coordinates: [103.81, 1.35],
+    estimatedPopulation: '175,000 - 190,000',
+    percentageOfPopulation: '5.0%',
+    dataYear: '2020 Singapore Census',
+    dataConfidence: 'Census data',
+    dataSource: {
+      title: 'Census of Population 2020: Religion',
+      authorOrBody: 'Singapore Department of Statistics',
+      yearOrPeriod: '2020',
+      evidenceType: 'Census',
+      confidence: 'Census data'
+    },
+    majorCities: ['Singapore (Little India, Serangoon, Tank Road, Yishun)'],
+    keyTemples: ['Sri Mariamman Temple (South Bridge Rd, est. 1827 - National Monument)', 'Sri Srinivasa Perumal Temple (Serangoon Rd)', 'Sri Thendayuthapani (Chettiars\' Temple)', 'Sri Senpaga Vinayagar Temple'],
+    majorOrganizations: ['Hindu Endowments Board (HEB - Statutory Body)', 'Hindu Advisory Board', 'Ramakrishna Mission Singapore', 'Singapore Kadayanallur Muslim League & Hindu Sangam'],
+    historicalPresenceSummary: 'Part of the ancient Srivijaya maritime sphere and named "Singapura" (Lion City) by Prince Sang Nila Utama in 1299 CE; home to historic 19th-century Dravidian temples granted National Monument status.',
+    migrationHistorySummary: 'Indian traders, sepoys, and artisans arrived alongside Sir Stamford Raffles in 1819; followed by sustained merchant and civil servant migrations, and contemporary global technology professionals.',
+    historicalKingdoms: [
+      {
+        name: 'Kingdom of Singapura (Temasek)',
+        period: '1299 – 1398 CE',
+        classification: 'Hindu-Buddhist',
+        capital: 'Fort Canning Hill (Bukit Larangan)',
+        notableRulersOrSites: 'Sang Nila Utama (Sri Tri Buana), Parameswara',
+        primarySources: 'Malay Annals (Sejarah Melayu), Wang Dayuan Dao Yi Zhi Lue (1349)',
+        evidenceConfidence: 'Scholarly research'
+      }
+    ],
+    sacredSitesOrInscriptions: ['Singapore Stone (Sanskrit/Kawi inscription at mouth of Singapore River)', 'Sri Mariamman Temple National Monument']
+  },
+  {
+    id: 'mm',
+    name: 'Myanmar',
+    sanskritName: 'ब्रह्मदेशः (म्यानमार)',
+    region: 'Southeast Asia',
+    coordinates: [95.95, 21.91],
+    estimatedPopulation: '890,000 - 1,150,000',
+    percentageOfPopulation: '1.7% - 2.1%',
+    dataYear: '2014 Census & Department of Population',
+    dataConfidence: 'Census data',
+    dataSource: {
+      title: 'The 2014 Myanmar Population and Housing Census',
+      authorOrBody: 'Department of Population, Ministry of Labour, Immigration and Population',
+      yearOrPeriod: '2014 / 2021',
+      evidenceType: 'Census',
+      confidence: 'Census data'
+    },
+    majorCities: ['Yangon', 'Mandalay', 'Bago', 'Mawlamyine', 'Pyin Oo Lwin'],
+    keyTemples: ['Nathlaung Kyaung (Bagan - ancient 11th c. Vishnu Temple)', 'Shri Kali Temple (Little India, Yangon)', 'Sri Shiva Temple (Mandalay)', 'Sri Radha Mandalay Mandir'],
+    majorOrganizations: ['All Myanmar Hindu Central Council', 'Sanatan Dharma Swayamsevak Sangh (SDSS)', 'Brahma Temple Preservation Council'],
+    historicalPresenceSummary: 'Ancient Pyu city-states and Pagan Kingdom incorporated Vishnu worship and Sanskrit mantras; preserved in Bagan\'s 11th-century Nathlaung Kyaung temple and syncretic reverence of Thagyamin (Indra).',
+    migrationHistorySummary: 'Maritime interactions since Suvarnabhumi era; large-scale migration during the British Burma administration (1852–1937) into trade, transport, and administration.',
+    historicalKingdoms: [
+      {
+        name: 'Pagan Kingdom (Bagan)',
+        period: 'c. 849 – 1297 CE',
+        classification: 'Hindu-Buddhist',
+        capital: 'Bagan',
+        notableRulersOrSites: 'King Anawrahta, Nathlaung Kyaung (dedicated to Vishnu and Dashavatara)',
+        primarySources: 'Bagan Mon and Sanskrit inscriptions, Hmannan Yazawin chronicle',
+        evidenceConfidence: 'Archaeological evidence'
+      }
+    ],
+    sacredSitesOrInscriptions: ['Nathlaung Kyaung 11th c. stone reliefs of Vishnu on Garuda', 'Pyu city-states Vishnu and Shiva artefacts (UNESCO Heritage)']
+  },
+  {
+    id: 'ke',
+    name: 'Kenya',
+    sanskritName: 'केन्यादेशः',
+    region: 'Africa',
+    coordinates: [37.90, -0.02],
+    estimatedPopulation: '60,000 - 75,000',
+    percentageOfPopulation: '0.13%',
+    dataYear: '2019 Kenya Population & Housing Census',
+    dataConfidence: 'Census data',
+    dataSource: {
+      title: '2019 Kenya Population and Housing Census: Volume IV',
+      authorOrBody: 'Kenya National Bureau of Statistics (KNBS)',
+      yearOrPeriod: '2019',
+      evidenceType: 'Census',
+      confidence: 'Census data'
+    },
+    majorCities: ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret'],
+    keyTemples: ['BAPS Shri Swaminarayan Mandir (Forest Road, Nairobi)', 'Shree Sanatan Dharam Sabha Mandir (Nairobi)', 'Lord Shiva Temple (Mombasa)'],
+    majorOrganizations: ['Hindu Council of Kenya (HCK - recognized by Kenya Govt)', 'Arya Samaj Kenya', 'BAPS Kenya', 'Bhartiya Swayamsevak Sangh (BSS)'],
+    historicalPresenceSummary: 'Centuries-old Swahili coast dhow trade with Gujarat and Kutch; played a foundational role in building the Kenya-Uganda Railway in the 1890s.',
+    migrationHistorySummary: 'Indian railway artisans (dukawallas) and merchants settled in Mombasa and Nairobi in the late 19th century, remaining resilient during post-colonial Africanization eras.',
+    historicalKingdoms: [],
+    sacredSitesOrInscriptions: ['BAPS Nairobi Mandir (built entirely with yellow stone without steel reinforcement)']
+  },
+  {
+    id: 'nl',
+    name: 'Netherlands',
+    sanskritName: 'नेदरलैंड्स (हॉलैण्ड्)',
+    region: 'Europe',
+    coordinates: [5.29, 52.13],
+    estimatedPopulation: '125,000 - 150,000',
+    percentageOfPopulation: '0.7% - 0.9%',
+    dataYear: '2021 CBS Netherlands',
+    dataConfidence: 'Census data',
+    dataSource: {
+      title: 'Religieuze betrokkenheid van bevolkingsgroepen',
+      authorOrBody: 'Centraal Bureau voor de Statistiek (CBS Netherlands)',
+      yearOrPeriod: '2021',
+      evidenceType: 'Census',
+      confidence: 'Census data'
+    },
+    majorCities: ['The Hague (Den Haag)', 'Rotterdam', 'Amsterdam', 'Utrecht', 'Almere'],
+    keyTemples: ['Sewa Dhaam Mandir (The Hague)', 'Shri Krishna Mandir (The Hague)', 'Triloki Dhaam (Rotterdam)', 'Murugan Temple (Roermond)'],
+    majorOrganizations: ['Sanatan Dharm Maha Sabha Nederland', 'Arya Samaj Nederland (ASAN)', 'Stichting Hindoe Onderwijs (Hindu Schools Network)'],
+    historicalPresenceSummary: 'Largest Hindu population in continental Western Europe, primarily comprised of Surinamese Hindustanis who relocated around Suriname\'s 1975 independence.',
+    migrationHistorySummary: 'Surinamese diaspora migration to Dutch cities in the 1970s; now augmented by Indian IT and engineering professionals in Amsterdam and Eindhoven.',
+    historicalKingdoms: [],
+    sacredSitesOrInscriptions: ['Historic Hindu schools (Shri Laksmi School, Shri Vishnu School) operating under Dutch state educational accreditation']
+  },
+  {
+    id: 'de',
+    name: 'Germany',
+    sanskritName: 'जर्मनीदेशः',
+    region: 'Europe',
+    coordinates: [10.45, 51.16],
+    estimatedPopulation: '130,000 - 150,000',
+    percentageOfPopulation: '0.16%',
+    dataYear: '2022 REMID / Federal Statistical Office',
+    dataConfidence: 'Scholarly research',
+    dataSource: {
+      title: 'Religionswissenschaftlicher Medien- und Informationsdienst (REMID)',
+      authorOrBody: 'REMID Germany & Federal Statistical Office (Destatis)',
+      yearOrPeriod: '2022',
+      evidenceType: 'Scholarly Monograph',
+      confidence: 'Scholarly research'
+    },
+    majorCities: ['Berlin', 'Frankfurt', 'Munich', 'Hamm', 'Cologne', 'Stuttgart'],
+    keyTemples: ['Sri Kamadchi Ampal Temple (Hamm-Uentrop - second largest Hindu temple in Europe)', 'Sri Ganesha Hindu Temple (Berlin)', 'Sri Nagapooshani Amman Temple (Frankfurt)'],
+    majorOrganizations: ['Hindu Forum Germany', 'Zentralrat der Hindus in Deutschland', 'Deutsch-Indische Gesellschaft', 'Tamil Hindu Cultural Association Germany'],
+    historicalPresenceSummary: 'Pioneered European Indology and Sanskrit studies through scholars like Max Müller, Schopenhauer, and Wilhelm von Humboldt; living community enriched by Sri Lankan Tamil refugees and Indian professionals.',
+    migrationHistorySummary: '1980s Sri Lankan Tamil diaspora established prominent Dravidian gopuram temples; 2010s-2020s skilled technological migration.',
+    historicalKingdoms: [],
+    sacredSitesOrInscriptions: ['Sri Kamadchi Ampal Temple in Hamm with traditional Dravidian stone architecture and annual street chariot procession (Ther)']
+  },
+  {
+    id: 'nz',
+    name: 'New Zealand',
+    sanskritName: 'न्यूजीलैंड-द्वीपः',
+    region: 'Oceania',
+    coordinates: [174.88, -40.90],
+    estimatedPopulation: '121,644 - 135,000',
+    percentageOfPopulation: '2.6%',
+    dataYear: '2018/2023 Census of New Zealand',
+    dataConfidence: 'Census data',
+    dataSource: {
+      title: '2018 & 2023 Census of Population and Dwellings',
+      authorOrBody: 'Statistics New Zealand (Tatauranga Aotearoa)',
+      yearOrPeriod: '2018-2023',
+      evidenceType: 'Census',
+      confidence: 'Census data'
+    },
+    majorCities: ['Auckland (Central, Manukau)', 'Wellington', 'Christchurch', 'Hamilton'],
+    keyTemples: ['Bharatiya Mandir (Sandringham, Auckland - oldest mandir in NZ, est. 1986)', 'BAPS Shri Swaminarayan Mandir (Avondale)', 'Sri Venkateswara Temple (Wainuiomata, Wellington)'],
+    majorOrganizations: ['Hindu Council of New Zealand (HCNZ)', 'New Zealand Hindu Temple Society', 'Auckland Indian Association', 'BAPS NZ'],
+    historicalPresenceSummary: 'Fast-growing religious community in New Zealand, celebrating Diwali on the Auckland waterfront as one of the country\'s largest public cultural festivals.',
+    migrationHistorySummary: 'Early 19th-century Gujarati and Punjabi agriculturalists, supplemented by post-1987 skilled migration and Indo-Fijian families relocating after political coups in Fiji.',
+    historicalKingdoms: [],
+    sacredSitesOrInscriptions: ['Bharatiya Mandir heritage complex in Auckland', 'Wellington Sri Venkateswara Hilltop Temple']
+  },
+  {
+    id: 'om',
+    name: 'Oman',
+    sanskritName: 'ओमानदेशः',
+    region: 'Middle East',
+    coordinates: [55.97, 21.47],
+    estimatedPopulation: '180,000 - 210,000',
+    percentageOfPopulation: '3.8% - 4.2%',
+    dataYear: '2022 NCSI Oman / Religious Affairs',
+    dataConfidence: 'Scholarly research',
+    dataSource: {
+      title: 'National Centre for Statistics and Information (NCSI Oman)',
+      authorOrBody: 'NCSI Oman & Ministry of Endowments and Religious Affairs',
+      yearOrPeriod: '2022',
+      evidenceType: 'Scholarly Monograph',
+      confidence: 'Scholarly research'
+    },
+    majorCities: ['Muscat (Ruwi, Muttrah)', 'Salalah', 'Sohar'],
+    keyTemples: ['Motishwar Mandir (Old Muscat - over 125 years old Shiva temple)', 'Shree Krishna Temple (Darsait)', 'BAPS Hindu Center Muscat'],
+    majorOrganizations: ['Hindu Mahajan Temple Management Committee (Muscat)', 'Indian Social Club Oman'],
+    historicalPresenceSummary: 'Continuous mercantile presence of the Bhatia and Kutch merchant communities for over 300 years; royal family granted religious land rights and protections.',
+    migrationHistorySummary: 'Merchant families established permanent trading outposts under the Sultans of Oman since the 18th century; expanded during Oman\'s modern renaissance.',
+    historicalKingdoms: [],
+    sacredSitesOrInscriptions: ['Historic Motishwar Mandir at the foot of Old Muscat mountain pass with consecrated well']
+  },
+  {
+    id: 'jp',
+    name: 'Japan',
+    sanskritName: 'निप्पोन / जापानदेशः',
+    region: 'East Asia',
+    coordinates: [138.25, 36.20],
+    estimatedPopulation: '35,000 - 45,000 (Resident Indian community; alongside nationwide cultural syncretism with Hindu deities in Shingon and Tendai Buddhism)',
+    percentageOfPopulation: '0.03%',
+    dataYear: '2023 Ministry of Justice Japan / Embassy of India',
+    dataConfidence: 'Scholarly research',
+    dataSource: {
+      title: 'Statistics on Foreign Residents & Cultural Indology Bulletins',
+      authorOrBody: 'Immigration Services Agency of Japan & University of Tokyo Indology Dept',
+      yearOrPeriod: '2022-2023',
+      evidenceType: 'Census',
+      confidence: 'Scholarly research',
+      notes: 'Demographic tally represents contemporary residents. Historical assimilation of Vedic deities into Japanese Shingon and Tendai pantheon (Benzaiten, Daikokuten, Kangiten, Enma) is substantiated by archaeological temple statuary.'
+    },
+    majorCities: ['Tokyo (Nishi-Kasai, Koto-ku)', 'Yokohama', 'Kobe', 'Osaka', 'Kyoto'],
+    keyTemples: ['Shirdi Saibaba Temple (Tokyo)', 'Sri Sri Radha Govinda Mandir / ISKCON Tokyo', 'Historic Benzaiten Shrines (Enoshima, Kamakura)', 'Matsuchiyama Shoden (Kangiten / Ganesha temple, Asakusa)'],
+    majorOrganizations: ['The Indian Community Activities Tokyo (ICAT)', 'Kobe Indian Club (est. 1904)', 'Japan-India Association (est. 1903)', 'Vishwa Hindu Parishad Japan'],
+    historicalPresenceSummary: 'Ancient spiritual transmission via Bodhisena (Indian monk who consecrated the Great Buddha at Tōdai-ji, Nara in 752 CE); deep synthesis of Hindu deities into Japanese culture (Benzaiten/Saraswati, Daikokuten/Mahakala, Kangiten/Ganesha, Bishamonten/Kubera). Modern community anchored in Tokyo\'s tech corridors and historic Kobe pearl traders.',
+    migrationHistorySummary: 'Sindhi and Gujarati pearl/silk merchants arrived in Yokohama and Kobe in the 1870s; modern IT engineers and academics concentrated in Nishi-Kasai (Tokyo).',
+    historicalKingdoms: [
+      {
+        name: 'Classical Nara & Heian Cultural Syncretism',
+        period: '710 – 1185 CE',
+        classification: 'Hindu cultural influence',
+        capital: 'Nara, Heian-kyo (Kyoto)',
+        notableRulersOrSites: 'Bodhisena (Bharadvaja Brahmin monk from Madurai), Emperor Shomu (Todai-ji consecration)',
+        primarySources: 'Shoku Nihongi (Imperial chronicle, 797 CE), Todai-ji records',
+        evidenceConfidence: 'Archaeological evidence'
+      }
+    ],
+    sacredSitesOrInscriptions: ['Enoshima Benzaiten Shrine (consecrated to Saraswati)', 'Todai-ji Temple in Nara consecrated by Indian monk Bodhisena (752 CE)', 'Sanskrit Siddham calligraphy preserved in Koyasan monasteries']
+  },
+  {
+    id: 'ph',
+    name: 'Philippines',
+    sanskritName: 'फिलिपीन्स-द्वीपसमूहः',
+    region: 'Southeast Asia',
+    coordinates: [121.77, 12.87],
+    estimatedPopulation: '28,000 - 35,000',
+    percentageOfPopulation: '0.03%',
+    dataYear: '2020 PSA / Embassy reports',
+    dataConfidence: 'Scholarly research',
+    dataSource: {
+      title: 'Philippine Statistics Authority & National Museum Archaeology',
+      authorOrBody: 'PSA Philippines & National Museum of the Philippines',
+      yearOrPeriod: '2020',
+      evidenceType: 'Archaeology',
+      confidence: 'Archaeological evidence'
+    },
+    majorCities: ['Manila (Paco, Makati)', 'Cebu City', 'Davao City'],
+    keyTemples: ['Hindu Temple of Manila (Paco, est. 1974)', 'Sri Sri Radha Madhava Mandir (Makati)', 'ISCOWP Farm (Rizal)'],
+    majorOrganizations: ['Hindu Temple Inc. Paco', 'Indian Cultural Association of the Philippines', 'Sindhi Chamber of Commerce Manila'],
+    historicalPresenceSummary: 'Archaeological evidence reveals pre-colonial contact with the Srivijaya and Majapahit empires, highlighted by the discovery of the Laguna Copperplate Inscription (900 CE) written in Kawi with Sanskrit vocabulary, and the 21-karat Golden Tara of Agusan.',
+    migrationHistorySummary: 'Pre-colonial trade ties followed by Sindhi and Punjabi merchants arriving in the early 20th century, and modern healthcare and IT professionals.',
+    historicalKingdoms: [
+      {
+        name: 'Rajnate of Butuan & Kingdom of Tondo',
+        period: 'c. 9th – 15th century CE',
+        classification: 'Hindu cultural influence',
+        capital: 'Butuan (Mindanao), Tondo (Luzon)',
+        notableRulersOrSites: 'Rajah Kiling, Golden Tara of Agusan, Laguna Copperplate',
+        primarySources: 'Laguna Copperplate Inscription (900 CE), Song Dynasty trade records',
+        evidenceConfidence: 'Archaeological evidence'
+      }
+    ],
+    sacredSitesOrInscriptions: ['Golden Tara of Agusan (4-pound, 21-karat gold Buddhist-Hindu sculpture discovered in 1917, now in Chicago Field Museum)', 'Laguna Copperplate Inscription (900 CE)']
   }
 ]
 
@@ -1104,6 +1423,7 @@ export const COMMUNITY_DIRECTORY_DATA: CommunityDirectoryItem[] = [
     category: 'Temple',
     country: 'United Kingdom',
     city: 'London',
+    coordinates: [-0.26, 51.55],
     foundedYear: '1995',
     traditionOrFocus: 'Swaminarayan / Vaishnava',
     description: 'Masterpiece of traditional Hindu stone architecture carved from Bulgarian limestone and Italian Carrara marble.',
@@ -1115,6 +1435,7 @@ export const COMMUNITY_DIRECTORY_DATA: CommunityDirectoryItem[] = [
     category: 'Temple',
     country: 'United States',
     city: 'Robbinsville, New Jersey',
+    coordinates: [-74.58, 40.23],
     foundedYear: '2023',
     traditionOrFocus: 'Sanatana Dharma / Universal Peace',
     description: 'Largest Hindu mandir complex in the Western Hemisphere, dedicated to Bhagwan Swaminarayan and ancient Indian sages.',
@@ -1126,6 +1447,7 @@ export const COMMUNITY_DIRECTORY_DATA: CommunityDirectoryItem[] = [
     category: 'Temple',
     country: 'Fiji',
     city: 'Nadi',
+    coordinates: [177.44, -17.81],
     foundedYear: '1926 / Rebuilt 1994',
     traditionOrFocus: 'Shaivite / Murugan / Dravidian Agama',
     description: 'Largest Hindu temple in the Southern Hemisphere, honoring the faith and perseverance of Fiji Girmitiyas.',
@@ -1137,6 +1459,7 @@ export const COMMUNITY_DIRECTORY_DATA: CommunityDirectoryItem[] = [
     category: 'Temple',
     country: 'Trinidad and Tobago',
     city: 'Waterloo, Carapichaima',
+    coordinates: [-61.47, 10.47],
     foundedYear: '1947–1952 (Reconstructed 1995)',
     traditionOrFocus: 'Universal Sanatani Devotion',
     description: 'Hand-built on the sea reef by Sewdass Sadhu after colonial plantation authorities banned him from building on land.',
@@ -1148,6 +1471,7 @@ export const COMMUNITY_DIRECTORY_DATA: CommunityDirectoryItem[] = [
     category: 'Temple',
     country: 'United Arab Emirates',
     city: 'Abu Dhabi (Abu Mureikha)',
+    coordinates: [54.77, 24.60],
     foundedYear: '2024',
     traditionOrFocus: 'Universal Harmony / Sanatana Dharma',
     description: 'First traditional Hindu stone temple in the Middle East, built on land gifted by Crown Prince Sheikh Mohammed bin Zayed Al Nahyan.',
@@ -1159,9 +1483,118 @@ export const COMMUNITY_DIRECTORY_DATA: CommunityDirectoryItem[] = [
     category: 'Temple',
     country: 'Mauritius',
     city: 'Triolet',
+    coordinates: [57.55, -20.05],
     foundedYear: '1891',
     traditionOrFocus: 'Shaivite / Bengal-style Shivalaya',
     description: 'Historic and largest temple complex in Mauritius, founded by Pandit Sanjibonlall Ramsoondur.',
+    verifiedStatus: 'Verified'
+  },
+  {
+    id: 'pura-besakih-bali',
+    name: 'Pura Besakih (Mother Temple of Bali)',
+    category: 'Temple',
+    country: 'Indonesia',
+    city: 'Karangasem, Bali',
+    coordinates: [115.45, -8.37],
+    foundedYear: 'c. 8th–10th Century CE',
+    traditionOrFocus: 'Agama Hindu Dharma / Tri Murti / Shiva-Siddhanta',
+    description: 'The holiest and largest temple complex in Bali, terraced on the slopes of sacred Mount Agung.',
+    verifiedStatus: 'Verified'
+  },
+  {
+    id: 'batu-caves-malaysia',
+    name: 'Batu Caves Sri Subramaniar Swamy Devasthanam',
+    category: 'Temple',
+    country: 'Malaysia',
+    city: 'Gombak, Selangor',
+    coordinates: [101.68, 3.24],
+    foundedYear: '1890',
+    traditionOrFocus: 'Kaumaram / Lord Murugan',
+    description: 'Limestone hill featuring the iconic 140-foot golden Lord Murugan statue and 272 steps, host to the world\'s largest Thaipusam pilgrimage.',
+    verifiedStatus: 'Verified'
+  },
+  {
+    id: 'sri-mariamman-singapore',
+    name: 'Sri Mariamman Temple',
+    category: 'Temple',
+    country: 'Singapore',
+    city: 'Chinatown / South Bridge Road',
+    coordinates: [103.84, 1.28],
+    foundedYear: '1827',
+    traditionOrFocus: 'Shakta / Dravidian Temple Architecture',
+    description: 'Oldest Hindu temple in Singapore, gazetted as a National Monument of Singapore.',
+    verifiedStatus: 'Verified'
+  },
+  {
+    id: 'baps-nairobi-kenya',
+    name: 'BAPS Shri Swaminarayan Mandir (Nairobi)',
+    category: 'Temple',
+    country: 'Kenya',
+    city: 'Forest Road, Nairobi',
+    coordinates: [36.82, -1.27],
+    foundedYear: '1999',
+    traditionOrFocus: 'Swaminarayan / Traditional Stone Architecture',
+    description: 'Constructed entirely from yellow Rajasthani sandstone without steel framing, recognized for architectural craftsmanship in East Africa.',
+    verifiedStatus: 'Verified'
+  },
+  {
+    id: 'motishwar-mandir-oman',
+    name: 'Motishwar Mandir (Old Muscat Shiva Temple)',
+    category: 'Temple',
+    country: 'Oman',
+    city: 'Old Muscat',
+    coordinates: [58.59, 23.61],
+    foundedYear: 'c. 1890s (Over 125 Years)',
+    traditionOrFocus: 'Shaivite / Mercantile Community Devotion',
+    description: 'Historic Shiva temple at the foot of Muscat\'s mountain fortress, preserved by the Hindu Mahajan merchant community.',
+    verifiedStatus: 'Verified'
+  },
+  {
+    id: 'seoul-radha-shyamasundar',
+    name: 'Sri Radha Shyamasundar Mandir',
+    category: 'Temple',
+    country: 'South Korea',
+    city: 'Seoul (Haebangchon)',
+    coordinates: [126.98, 37.53],
+    foundedYear: '2008',
+    traditionOrFocus: 'Gaudiya Vaishnavism / Vedic Wisdom',
+    description: 'Center for Vedic studies, Sanskrit chanting, and festival celebrations in the heart of Seoul.',
+    verifiedStatus: 'Verified'
+  },
+  {
+    id: 'gimhae-queen-heo-memorial',
+    name: 'Queen Heo Hwang-ok Memorial Park & Shrine',
+    category: 'Cultural Association',
+    country: 'South Korea',
+    city: 'Gimhae, Gyeongsangnam-do',
+    coordinates: [128.88, 35.24],
+    foundedYear: '2001 (Sister-city park expanded 2019)',
+    traditionOrFocus: 'Historical Chronicle Memory & Cultural Diplomacy',
+    description: 'Memorial site commemorating the chronicle tradition linking Princess Suriratna of Ayuta (Ayodhya) and King Suro of Gaya.',
+    verifiedStatus: 'Verified'
+  },
+  {
+    id: 'bharatiya-mandir-auckland',
+    name: 'Bharatiya Mandir Auckland',
+    category: 'Temple',
+    country: 'New Zealand',
+    city: 'Sandringham, Auckland',
+    coordinates: [174.73, -36.88],
+    foundedYear: '1986',
+    traditionOrFocus: 'Sanatana Dharma / Universal Devotion',
+    description: 'First purpose-built Hindu temple in New Zealand, serving as the spiritual anchor for the New Zealand diaspora.',
+    verifiedStatus: 'Verified'
+  },
+  {
+    id: 'kamadchi-ampal-germany',
+    name: 'Sri Kamadchi Ampal Temple',
+    category: 'Temple',
+    country: 'Germany',
+    city: 'Hamm-Uentrop',
+    coordinates: [7.92, 51.68],
+    foundedYear: '2002',
+    traditionOrFocus: 'Shakta / Dravidian Gopuram Tradition',
+    description: 'Second largest Hindu temple in Europe, built by Tamil Hindus in North Rhine-Westphalia with an authentic granite sanctum.',
     verifiedStatus: 'Verified'
   },
   {
@@ -1170,6 +1603,7 @@ export const COMMUNITY_DIRECTORY_DATA: CommunityDirectoryItem[] = [
     category: 'Cultural Association',
     country: 'United States',
     city: 'Washington, D.C.',
+    coordinates: [-77.03, 38.90],
     foundedYear: '2003',
     traditionOrFocus: 'Advocacy, Human Rights & Education',
     description: 'Non-profit advocacy organization providing a clear, authentic voice for Hindu Americans on policy and civil rights.',
@@ -1181,6 +1615,7 @@ export const COMMUNITY_DIRECTORY_DATA: CommunityDirectoryItem[] = [
     category: 'Seva Organization',
     country: 'Global (India, USA, UK, Australia, Guyana)',
     city: 'Houston / New Delhi / London',
+    coordinates: [-95.36, 29.76],
     foundedYear: '1997',
     traditionOrFocus: 'Naraseva is Narayanaseva / Disaster Relief & Education',
     description: 'Selfless community service organization active in major flood, earthquake, and humanitarian emergency response operations.',
@@ -1192,6 +1627,7 @@ export const COMMUNITY_DIRECTORY_DATA: CommunityDirectoryItem[] = [
     category: 'Sampradāya Community',
     country: 'Indonesia',
     city: 'Jakarta & Denpasar',
+    coordinates: [115.22, -8.67],
     foundedYear: '1959',
     traditionOrFocus: 'Agama Hindu Dharma / Balinese Hindu Tradition',
     description: 'Highest representative council of Hindus in Indonesia, preserving ancestral temple rites, festivals, and philosophy.',
@@ -1203,6 +1639,7 @@ export const COMMUNITY_DIRECTORY_DATA: CommunityDirectoryItem[] = [
     category: 'Cultural Association',
     country: 'Malaysia',
     city: 'Petaling Jaya, Selangor',
+    coordinates: [101.65, 3.10],
     foundedYear: '1965',
     traditionOrFocus: 'Preservation of Temples, Tamil & Sanskrit Heritage',
     description: 'Apex national body coordinating Hindu temples, religious education, and community advocacy across Malaysia.',
@@ -1214,6 +1651,7 @@ export const COMMUNITY_DIRECTORY_DATA: CommunityDirectoryItem[] = [
     category: 'Study Group',
     country: 'Global (USA, UK, Canada, Australia, Singapore, India)',
     city: 'Mumbai / Piercy, CA',
+    coordinates: [-123.79, 39.97],
     foundedYear: '1953',
     traditionOrFocus: 'Advaita Vedanta / Bhagavad Gita & Upanishads Study',
     description: 'Founded by Swami Chinmayananda to provide spiritual wisdom of the scriptures to all ages through study groups (Bala Vihar).',
@@ -1225,10 +1663,238 @@ export const COMMUNITY_DIRECTORY_DATA: CommunityDirectoryItem[] = [
     category: 'Youth Group',
     country: 'Fiji',
     city: 'Suva',
+    coordinates: [178.44, -18.14],
     foundedYear: '1904',
     traditionOrFocus: 'Vedic Education, Schools & Social Reform',
     description: 'Established the primary educational institutions in Fiji, championing girls\' education and Vedic values.',
     verifiedStatus: 'Verified'
+  }
+]
+
+export const GEO_MIGRATION_ROUTES: GeoMigrationRoute[] = [
+  {
+    id: 'ancient-maritime-se-asia',
+    eraId: 'ancient-ocean',
+    eraTitle: 'Ancient Maritime & Silk Trade (c. 500 BCE – 1300 CE)',
+    title: 'Bay of Bengal & Maritime Silk Route',
+    timePeriod: '1st Millennium CE',
+    origin: 'Kalinga (Odisha), Coromandel (Tamil Nadu) & Tamralipta (Bengal)',
+    destination: 'Suvarnabhumi, Kataha, Java, Bali & Angkor (SE Asia)',
+    waypoints: [
+      [21.6, 87.9],
+      [17.7, 83.3],
+      [13.0, 80.3],
+      [11.6, 92.7],
+      [5.4, 100.3],
+      [1.3, 103.8],
+      [-6.2, 106.8],
+      [-8.3, 115.1],
+      [10.5, 107.0],
+      [13.4, 103.8]
+    ],
+    vesselOrType: 'Ancient Indian merchant galleys & Sārthavāha fleets',
+    significance: 'Carried Sanskrit epigraphy, Pallava script, Ramayana, and architectural shastras resulting in Angkor Wat, Prambanan, and Champa sanctuaries.',
+    keyPortsOrStops: ['Tamralipta', 'Mamallapuram', 'Nagapattinam', 'Kedah Tua', 'Palembang', 'Medang (Java)', 'Angkor'],
+    evidenceConfidence: 'Archaeological evidence',
+    sourcesSummary: 'Bujang Valley 5th-century epigraphy, Vo Canh stele, Canggal inscription, Periplus of the Erythraean Sea.'
+  },
+  {
+    id: 'chola-maritime-expedition',
+    eraId: 'ancient-ocean',
+    eraTitle: 'Classical & Medieval Maritime Spheres (c. 800 – 1300 CE)',
+    title: 'Chola Imperial Maritime Route (Rajendra Chola I)',
+    timePeriod: '1025 CE – 1100 CE',
+    origin: 'Nagapattinam & Kaveripattinam (Tamil Nadu)',
+    destination: 'Kadaram (Kedah, Malaysia), Srivijaya (Sumatra), Pannai & Tambralinga',
+    waypoints: [
+      [10.76, 79.84],
+      [11.6, 92.7],
+      [5.4, 100.3],
+      [3.0, 101.4],
+      [-2.9, 104.7],
+      [1.3, 103.8]
+    ],
+    vesselOrType: 'Chola Royal War Galleys and Ainnurruvar (Five Hundred Lords of Ayyavole) Merchant Navies',
+    significance: 'Secured naval trade lanes, protected Tamil and Sanskrit guild merchant colonies (Manigramam), and established permanent diplomatic embassies to China (Song Dynasty).',
+    keyPortsOrStops: ['Nagapattinam', 'Andaman & Nicobar Islands', 'Kadaram (Kedah)', 'Palembang (Srivijaya)', 'Malacca Strait'],
+    evidenceConfidence: 'Epigraphic Evidence' as ConfidenceLabel,
+    sourcesSummary: 'Thanjavur Brihadisvara Temple inscriptions (1025 CE), Canton & Quanzhou Tamil-Chinese bilingual stele, Song Shi imperial annals.'
+  },
+  {
+    id: 'ancient-silk-road-trans-himalaya',
+    eraId: 'ancient-ocean',
+    eraTitle: 'Ancient Maritime & Silk Trade (c. 500 BCE – 1300 CE)',
+    title: 'Northern Silk Road & Trans-Himalayan Cultural Diffusion',
+    timePeriod: '1st – 8th Century CE',
+    origin: 'Gandhara (Takṣaśilā) & Kashmir',
+    destination: 'Tarim Basin (Khotan), Dunhuang, Chang\'an, Korea & Japan',
+    waypoints: [
+      [33.7, 72.8],
+      [34.1, 74.8],
+      [37.1, 79.9],
+      [40.1, 94.6],
+      [34.3, 108.9],
+      [35.2, 128.8],
+      [34.6, 135.8]
+    ],
+    vesselOrType: 'Trans-Himalayan caravans along Northern Silk Road passes',
+    significance: 'Transmission of Sanskrit philosophical texts, Ayurvedic treatises, and deity iconography (Shiva/Mahakala, Saraswati, Ganesha) into Central Asia and East Asia.',
+    keyPortsOrStops: ['Takṣaśilā', 'Srinagar', 'Khotan (Dandan-Uiliq)', 'Dunhuang Caves', 'Luoyang', 'Gimhae (Korea)', 'Nara (Japan)'],
+    evidenceConfidence: 'Archaeological evidence',
+    sourcesSummary: 'Penjikent murals, Aurel Stein Tarim manuscripts, Shoku Nihongi records of monk Bodhisena (752 CE).'
+  },
+  {
+    id: 'ancient-western-indian-ocean',
+    eraId: 'ancient-ocean',
+    eraTitle: 'Ancient Maritime & Silk Trade (c. 500 BCE – 1300 CE)',
+    title: 'Western Indian Ocean & Arabian Sea Trade',
+    timePeriod: 'c. 300 BCE – 1400 CE',
+    origin: 'Bharuch (Bhrigukaccha) & Mandvi (Kutch)',
+    destination: 'Muscat (Oman), Socotra, Aden & Swahili Coast',
+    waypoints: [
+      [21.7, 72.9],
+      [22.8, 69.3],
+      [23.6, 58.5],
+      [12.8, 45.0],
+      [-6.1, 39.2]
+    ],
+    vesselOrType: 'Traditional dhow vessels powered by winter Northeast monsoons',
+    significance: 'Centuries of commercial exchanges between Gujarat/Sindh and Gulf ports; established persistent mercantile settlements with cultural autonomy in Oman and East Africa.',
+    keyPortsOrStops: ['Bharuch', 'Mandvi', 'Muscat', 'Socotra', 'Zanzibar'],
+    evidenceConfidence: 'Scholarly research',
+    sourcesSummary: 'Periplus of the Erythraean Sea, Al-Masudi Meadows of Gold, Old Muscat temple charters.'
+  },
+  {
+    id: 'girmit-mauritius',
+    eraId: 'colonial-indenture',
+    eraTitle: 'Colonial Indenture & Girmitiya Era (1834 – 1920 CE)',
+    title: 'Girmitiya Passage to Mauritius (The Pilot Migration)',
+    timePeriod: '1834 – 1910 CE',
+    origin: 'Calcutta & Madras Depots',
+    destination: 'Aapravasi Ghat, Port Louis (Mauritius)',
+    waypoints: [
+      [22.5, 88.3],
+      [13.0, 80.3],
+      [6.0, 82.0],
+      [-5.0, 75.0],
+      [-20.1, 57.5]
+    ],
+    vesselOrType: 'Ship *Atlas* (First departure, Nov 2, 1834) and fleet transport',
+    significance: 'First experimental indenture migration after British abolition of slavery in 1834; over 450,000 workers entered through Aapravasi Ghat, founding Mauritius\'s Hindu plurality.',
+    keyPortsOrStops: ['Calcutta Depot', 'Madras Depot', 'Aapravasi Ghat (UNESCO Heritage)'],
+    evidenceConfidence: 'Census data',
+    sourcesSummary: 'National Archives of Mauritius (Aapravasi Ghat immigration registers 1834-1920).'
+  },
+  {
+    id: 'girmit-south-africa',
+    eraId: 'colonial-indenture',
+    eraTitle: 'Colonial Indenture & Girmitiya Era (1834 – 1920 CE)',
+    title: 'Girmitiya Route to Natal (South Africa)',
+    timePeriod: '1860 – 1911 CE',
+    origin: 'Madras & Calcutta Depots',
+    destination: 'Port Natal (Durban, South Africa)',
+    waypoints: [
+      [13.0, 80.3],
+      [22.5, 88.3],
+      [6.0, 80.0],
+      [-10.0, 60.0],
+      [-25.0, 45.0],
+      [-29.8, 31.0]
+    ],
+    vesselOrType: 'Vessels *SS Truro* (arrived Nov 16, 1860) & *Belvedere*',
+    significance: 'Over 150,000 laborers brought to work sugarcane estates in KwaZulu-Natal; later served as the crucible for Mahatma Gandhi\'s Satyagraha movement (1893-1914).',
+    keyPortsOrStops: ['Madras Depot', 'Port Natal (Durban)', 'Pietermaritzburg'],
+    evidenceConfidence: 'Census data',
+    sourcesSummary: 'KwaZulu-Natal Provincial Archives; Department of Immigration reports Colony of Natal.'
+  },
+  {
+    id: 'girmit-caribbean',
+    eraId: 'colonial-indenture',
+    eraTitle: 'Colonial Indenture & Girmitiya Era (1834 – 1920 CE)',
+    title: 'Trans-Atlantic Girmit Voyage to Guyana, Trinidad & Suriname',
+    timePeriod: '1838 – 1917 CE',
+    origin: 'Calcutta Port (Garden Reach)',
+    destination: 'Highbury (Guyana), Port of Spain (Trinidad) & Paramaribo (Suriname)',
+    waypoints: [
+      [22.5, 88.3],
+      [5.0, 82.0],
+      [-34.0, 18.4],
+      [0.0, -20.0],
+      [6.8, -58.1],
+      [5.8, -55.2],
+      [10.6, -61.5]
+    ],
+    vesselOrType: '*Whitby* & *Hesperus* (1838), *Fatel Razack* (1845), *Lalla Rookh* (1873)',
+    significance: 'Sailing three to four months around the Cape of Good Hope across the Atlantic; established enduring Indo-Caribbean communities preserving Awadhi/Bhojpuri traditions.',
+    keyPortsOrStops: ['Calcutta', 'Cape Town (Resupply)', 'Highbury (Berbice)', 'Gulf of Paria (Trinidad)', 'Paramaribo (Suriname)'],
+    evidenceConfidence: 'Census data',
+    sourcesSummary: 'National Archives of Trinidad & Tobago; ABS Suriname; Guyana National Archives.'
+  },
+  {
+    id: 'girmit-fiji',
+    eraId: 'colonial-indenture',
+    eraTitle: 'Colonial Indenture & Girmitiya Era (1834 – 1920 CE)',
+    title: 'Trans-Pacific Girmit Voyage to Fiji',
+    timePeriod: '1879 – 1916 CE',
+    origin: 'Calcutta & Madras Depots',
+    destination: 'Suva & Nadi (Fiji)',
+    waypoints: [
+      [22.5, 88.3],
+      [5.0, 95.0],
+      [-8.0, 115.0],
+      [-25.0, 130.0],
+      [-35.0, 150.0],
+      [-18.1, 178.4]
+    ],
+    vesselOrType: 'Ship *Leonidas* (arrived May 14, 1879) and 86 subsequent voyages',
+    significance: 'Over 60,000 laborers transported across 7,000 miles of sea; built schools and temples throughout Viti Levu and Vanua Levu, establishing Fiji Hindi.',
+    keyPortsOrStops: ['Calcutta Depot', 'Torres Strait Passage', 'Yanuca Quarantine Station', 'Suva'],
+    evidenceConfidence: 'Census data',
+    sourcesSummary: 'Fiji National Archives; Indian Emigration Pass Registers (1879-1916).'
+  },
+  {
+    id: 'modern-global-north-america',
+    eraId: 'modern-global',
+    eraTitle: 'Modern Global Diaspora & Knowledge Movement (1965 – Present)',
+    title: 'North American Skilled & Professional Migration',
+    timePeriod: '1965 – Present',
+    origin: 'India (Delhi, Mumbai, Bengaluru, Hyderabad, Chennai)',
+    destination: 'United States & Canada (NYC, Silicon Valley, Texas, Toronto)',
+    waypoints: [
+      [19.0, 72.8],
+      [28.6, 77.2],
+      [51.5, -0.1],
+      [40.7, -74.0],
+      [43.6, -79.3],
+      [37.7, -122.4]
+    ],
+    vesselOrType: 'Commercial aviation routes post-1965 Immigration & Nationality Act',
+    significance: 'Led to the founding of monumental traditional mandirs (Robbinsville Akshardham, Toronto BAPS Mandir), university chairs, and medical/tech innovation.',
+    keyPortsOrStops: ['New Delhi / Mumbai', 'New York (JFK)', 'Toronto (YYZ)', 'San Francisco (SFO)'],
+    evidenceConfidence: 'Census data',
+    sourcesSummary: 'U.S. Census Bureau American Community Survey; Statistics Canada 2021 Census.'
+  },
+  {
+    id: 'modern-global-gulf',
+    eraId: 'modern-global',
+    eraTitle: 'Modern Global Diaspora & Knowledge Movement (1965 – Present)',
+    title: 'Arabian Gulf Workforce & Institutional Community Movement',
+    timePeriod: '1970s – Present',
+    origin: 'Kerala, Gujarat, Maharashtra, Andhra Pradesh, Tamil Nadu',
+    destination: 'United Arab Emirates, Oman, Qatar, Bahrain, Kuwait',
+    waypoints: [
+      [10.0, 76.3],
+      [19.0, 72.8],
+      [23.0, 72.6],
+      [24.4, 54.3],
+      [25.2, 55.3],
+      [23.6, 58.5]
+    ],
+    vesselOrType: 'Gulf airline corridors and commercial shipping routes',
+    significance: 'Over 3.5 million Indian professionals and workers in the GCC; historic 2024 milestone opening of the BAPS Hindu Mandir in Abu Dhabi on royal land gift.',
+    keyPortsOrStops: ['Kochi / Mumbai', 'Dubai', 'Abu Dhabi', 'Muscat'],
+    evidenceConfidence: 'Census data',
+    sourcesSummary: 'UAE Ministry of Human Resources & Emiratisation; NCSI Oman; Indian Ministry of External Affairs.'
   }
 ]
 

@@ -218,3 +218,5 @@ export function useLang(): Ctx {
   }
   return ctx
 }
+
+export const useI18n = useLang

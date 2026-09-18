@@ -1,252 +1,452 @@
-import { useState } from 'react'
-import { MIGRATION_ERAS, type MigrationEra } from '../../data/vishvaData'
-import { Compass, Ship, Clock, Globe2, ShieldCheck, BookOpen, ChevronRight, Anchor } from 'lucide-react'
-import HorizontalMigrationTimeline from './HorizontalMigrationTimeline'
+import { useState, useMemo } from 'react'
+import {
+  GEO_MIGRATION_ROUTES,
+  type GeoMigrationRoute,
+  type ConfidenceLabel
+} from '../../data/vishvaData'
+import {
+  TIMELINE_MILESTONES,
+  type TimelineMilestone
+} from './HorizontalMigrationTimeline'
+import {
+  Anchor,
+  Compass,
+  Ship,
+  Clock,
+  ChevronRight,
+  ChevronLeft,
+  ChevronDown,
+  ChevronUp,
+  MapPin,
+  ShieldCheck,
+  BookOpen,
+  Route,
+  ArrowRight,
+  Sparkles,
+  ExternalLink,
+  Sliders
+} from 'lucide-react'
 
-const DIASPORA_SPECIAL_HUBS = [
-  {
-    country: 'Mauritius',
-    year: '1834 CE',
-    ship: 'Atlas & Pioneer',
-    event: 'Global Pilot for Indentured Labor (Aapravasi Ghat)',
-    population: '48.5% of nation',
-    highlight: 'Ganga Talao (Grand Bassin) volcanic sacred lake consecrated with waters of the Holy Ganga in 1972.'
-  },
-  {
-    country: 'Guyana',
-    year: '1838 CE',
-    ship: 'SS Whitby & Hesperus',
-    event: 'First Caribbean Arrival on May 5, 1838',
-    population: '24.8% of nation',
-    highlight: 'Bhojpuri and Awadhi folk culture preserved; Phagwah and Deepavali celebrated as sovereign national holidays.'
-  },
-  {
-    country: 'Trinidad and Tobago',
-    year: '1845 CE',
-    ship: 'Fatel Razack',
-    event: 'Arrival in Gulf of Paria with 225 pioneers on May 30',
-    population: '18.1% of nation',
-    highlight: 'Sewdass Sadhu hand-built the Waterloo Temple in the Sea on the coastal reef after land worship was banned.'
-  },
-  {
-    country: 'South Africa',
-    year: '1860 CE',
-    ship: 'Truro (Madras) & Belvedere (Calcutta)',
-    event: 'Arrival in Port Natal (Durban) for sugarcane estates',
-    population: '550,000+ Hindus',
-    highlight: 'Birthplace of Mahatma Gandhi’s Satyagraha philosophy (1893–1914) at Phoenix Settlement, Durban.'
-  },
-  {
-    country: 'Suriname',
-    year: '1873 CE',
-    ship: 'Lalla Rookh',
-    event: 'Dutch colonial indenture agreement with British India',
-    population: '22.3% of nation',
-    highlight: 'Flourishing of Sarnami Hindustani language and Paramaribo’s monumental Arya Diwaker and Sanatan mandirs.'
-  },
-  {
-    country: 'Fiji',
-    year: '1879 CE',
-    ship: 'Leonidas (first of 87 voyages)',
-    event: '60,553 Girmitiyas transported between 1879 and 1916',
-    population: '27.9% of nation',
-    highlight: 'Preservation of Ramcharitmanas recitations; home to Sri Siva Subramaniya Kovil, largest temple in Southern Hemisphere.'
-  },
-  {
-    country: 'East Africa (Kenya, Uganda, Tanzania)',
-    year: '1890s – 1972 CE',
-    ship: 'Dhows across the Arabian Sea',
-    event: 'Uganda Railway construction & merchant trading communities',
-    population: 'Significant historic diaspora',
-    highlight: 'Despite the devastating 1972 expulsion of 60,000 Asians by Idi Amin, refugees rebuilt thriving institutions in the UK and Canada.'
-  },
-  {
-    country: 'United States & Canada',
-    year: '1965 – Present',
-    ship: 'Global Civil Aviation & Skilled Immigration',
-    event: '1965 Immigration and Nationality Act & 1967 Canadian Points System',
-    population: '4.5+ Million combined',
-    highlight: 'Pioneered biotechnology, computing, academic chairs, and constructed monumental stone mandirs (Akshardham Robbinsville).'
-  }
+export type TimelineEraCategory =
+  | 'Antiquity & Trade'
+  | 'Classical Kingdoms'
+  | 'Medieval Trade'
+  | 'Girmitiya Indenture'
+  | 'Modern Diaspora'
+
+const ERA_CATEGORIES: TimelineEraCategory[] = [
+  'Antiquity & Trade',
+  'Classical Kingdoms',
+  'Medieval Trade',
+  'Girmitiya Indenture',
+  'Modern Diaspora'
 ]
 
-export default function MigrationDiasporaTimeline() {
-  const [activeEra, setActiveEra] = useState<string>(MIGRATION_ERAS[0].id)
+interface MigrationDiasporaTimelineProps {
+  onHighlightRouteOnMap?: (routeId: string) => void
+}
 
-  const currentEraData = MIGRATION_ERAS.find((e) => e.id === activeEra) || MIGRATION_ERAS[0]
+export default function MigrationDiasporaTimeline({
+  onHighlightRouteOnMap
+}: MigrationDiasporaTimelineProps) {
+  const [selectedEra, setSelectedEra] = useState<TimelineEraCategory>('Antiquity & Trade')
+  const [selectedMilestoneIndex, setSelectedMilestoneIndex] = useState<number>(0)
+  const [isReadMoreExpanded, setIsReadMoreExpanded] = useState<boolean>(false)
+  const [selectedRouteModal, setSelectedRouteModal] = useState<GeoMigrationRoute | null>(null)
+
+  // Filter milestones matching selected era category
+  const eraMilestones = useMemo(() => {
+    return TIMELINE_MILESTONES.filter((m) => {
+      if (selectedEra === 'Medieval Trade') {
+        return m.eraCategory === 'Medieval Guilds'
+      }
+      return (m.eraCategory as string) === selectedEra
+    })
+  }, [selectedEra])
+
+  // Current active milestone
+  const currentMilestone: TimelineMilestone | undefined =
+    eraMilestones[selectedMilestoneIndex] || eraMilestones[0]
+
+  // Map route style categories
+  const routeCategories = useMemo(() => {
+    return [
+      {
+        styleName: 'Ancient Maritime Trade',
+        color: '#38bdf8',
+        borderStyle: 'border-dashed border-sky-400',
+        dotColor: 'bg-sky-400',
+        routes: GEO_MIGRATION_ROUTES.filter((r) => r.id === 'ancient-maritime-se-asia' || r.id === 'ancient-western-indian-ocean')
+      },
+      {
+        styleName: 'Silk Road Movement',
+        color: '#c084fc',
+        borderStyle: 'border-dashed border-purple-400',
+        dotColor: 'bg-purple-400',
+        routes: GEO_MIGRATION_ROUTES.filter((r) => r.id.includes('silk'))
+      },
+      {
+        styleName: 'Chola-Era Maritime Routes',
+        color: '#10b981',
+        borderStyle: 'border-solid border-emerald-400',
+        dotColor: 'bg-emerald-400',
+        routes: GEO_MIGRATION_ROUTES.filter((r) => r.id === 'chola-maritime-expedition')
+      },
+      {
+        styleName: 'Girmitiya Indenture Routes',
+        color: '#f59e0b',
+        borderStyle: 'border-dashed border-amber-400',
+        dotColor: 'bg-amber-400',
+        routes: GEO_MIGRATION_ROUTES.filter((r) => r.eraId === 'colonial-indenture')
+      },
+      {
+        styleName: 'Modern Diaspora Movement',
+        color: '#38bdf8',
+        borderStyle: 'border-dotted border-cyan-400',
+        dotColor: 'bg-cyan-400',
+        routes: GEO_MIGRATION_ROUTES.filter((r) => r.eraId === 'modern-global')
+      }
+    ]
+  }, [])
+
+  const handleEraSelect = (era: TimelineEraCategory) => {
+    setSelectedEra(era)
+    setSelectedMilestoneIndex(0)
+    setIsReadMoreExpanded(false)
+  }
+
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseInt(e.target.value, 10)
+    setSelectedMilestoneIndex(val)
+    setIsReadMoreExpanded(false)
+  }
+
+  const handleScrollToMap = (routeId?: string) => {
+    if (routeId && onHighlightRouteOnMap) {
+      onHighlightRouteOnMap(routeId)
+    }
+    const mapEl = document.getElementById('vishva-sanatana-world-map')
+    if (mapEl) {
+      mapEl.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
 
   return (
-    <section id="migration-diaspora" className="py-14 border-t border-gold-500/20">
+    <section id="migration-diaspora" className="py-12 border-t border-gold-500/20">
       <div className="max-w-7xl mx-auto">
-        {/* Section Title */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        {/* Header */}
+        <div className="text-center max-w-3xl mx-auto mb-8">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gold-500/10 border border-gold-500/20 text-gold-300 text-xs font-display uppercase tracking-widest font-semibold">
             <Anchor className="w-3.5 h-3.5 text-gold-400" />
-            Centuries of Resilience & Journey
+            Global Diaspora & Historic Journeys
           </div>
-          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-gold-100 text-glow">
-            Migration & The Global Sanātana Diaspora
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl font-bold text-gold-100 text-glow">
+            Interactive Migration Timeline
           </h2>
-          <p className="mt-3 font-body text-sm sm:text-base text-gold-200/75 leading-relaxed">
-            From the monsoon trade winds of the Indian Ocean to the perilous ships of 19th-century colonial indenture (Girmit) and modern academic hubs, tracing how sacred memory, Sanskrit texts, and communal faith journeyed across the earth.
+          <p className="mt-2 font-body text-sm text-stone-300 leading-relaxed">
+            Slide across three millennia of maritime navigation, Silk Road transmission, colonial Girmit voyages, and 20th-century knowledge migration.
           </p>
         </div>
 
-        {/* Horizontal Interactive Chronological Timeline Component */}
-        <HorizontalMigrationTimeline />
-
-        {/* 3 Era Selector Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-          {MIGRATION_ERAS.map((era) => {
-            const isActive = era.id === activeEra
-            return (
-              <button
-                key={era.id}
-                type="button"
-                onClick={() => setActiveEra(era.id)}
-                className={`text-left p-5 rounded-3xl border transition-all duration-300 flex flex-col justify-between ${
-                  isActive
-                    ? 'border-gold-400 bg-gradient-to-b from-gold-500/20 via-[#10172a] to-black shadow-xl shadow-gold-500/10'
-                    : 'border-gold-500/20 bg-black/40 hover:border-gold-500/40 hover:bg-gold-500/5'
-                }`}
-              >
-                <div>
-                  <span className="text-[10px] font-display uppercase tracking-widest text-gold-400 font-semibold">
-                    {era.timePeriod}
-                  </span>
-                  <h3 className="mt-2 font-display text-lg font-bold text-gold-100">
-                    {era.eraName}
-                  </h3>
-                  <p className="mt-2 text-xs font-body text-gold-300/70 line-clamp-2">
-                    {era.summary}
-                  </p>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-gold-500/15 flex items-center justify-between text-xs text-gold-400 font-display">
-                  <span>Explore Era</span>
-                  <ChevronRight className={`w-4 h-4 transition-transform ${isActive ? 'translate-x-1 text-gold-200' : ''}`} />
-                </div>
-              </button>
-            )
-          })}
+        {/* 1. TIMELINE CONTROLS: 5 Era Buttons */}
+        <div className="flex items-center justify-center gap-2 overflow-x-auto py-3 no-scrollbar mb-6">
+          {ERA_CATEGORIES.map((era) => (
+            <button
+              key={era}
+              type="button"
+              onClick={() => handleEraSelect(era)}
+              className={`px-4 py-2 rounded-xl text-xs font-display whitespace-nowrap transition border ${
+                selectedEra === era
+                  ? 'border-gold-400 bg-gold-500/25 text-gold-100 font-bold shadow-md'
+                  : 'border-gold-500/15 bg-black/40 text-stone-400 hover:border-gold-400/40 hover:text-gold-200'
+              }`}
+            >
+              {era}
+            </button>
+          ))}
         </div>
 
-        {/* Detailed Breakdown of Active Era */}
-        <div className="p-6 sm:p-8 rounded-3xl border border-gold-500/30 bg-gradient-to-b from-[#090e1c] via-[#050812] to-black shadow-2xl relative overflow-hidden mb-14">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-8">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-500/15 border border-gold-500/25 text-gold-300 text-xs font-display">
-                <Clock className="w-3.5 h-3.5 text-gold-400" />
-                {currentEraData.eraName}
-              </div>
-              <h3 className="font-display text-2xl sm:text-3xl font-bold text-gold-100">
-                {currentEraData.title}
-              </h3>
-              <p className="font-body text-xs sm:text-sm text-gold-200/80 leading-relaxed">
-                {currentEraData.summary}
-              </p>
-
-              <div className="pt-2">
-                <h4 className="font-display text-xs uppercase tracking-wider text-gold-300 font-semibold">
-                  Trade Routes & Legal Frameworks:
-                </h4>
-                <p className="mt-1 text-xs font-body text-gold-300/75">
-                  {currentEraData.tradeRoutesOrAgreements}
-                </p>
-              </div>
-
-              <div>
-                <h4 className="font-display text-xs uppercase tracking-wider text-gold-300 font-semibold">
-                  Civilizational & Cultural Impact:
-                </h4>
-                <p className="mt-1 text-xs font-body text-gold-300/75">
-                  {currentEraData.culturalImpact}
-                </p>
-              </div>
-            </div>
-
-            {/* Destinations & Verified References */}
-            <div className="space-y-5 bg-black/50 p-5 sm:p-6 rounded-2xl border border-gold-500/20">
-              <div>
-                <h4 className="text-xs font-display uppercase tracking-widest text-gold-400 font-semibold flex items-center gap-1.5">
-                  <Globe2 className="w-3.5 h-3.5" /> Key Geographical Destinations
-                </h4>
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {currentEraData.keyDestinations.map((dest, i) => (
-                    <span
-                      key={i}
-                      className="px-2.5 py-1 rounded-full bg-gold-500/10 border border-gold-500/20 text-gold-200 text-xs font-body"
-                    >
-                      {dest}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-gold-500/15">
-                <h4 className="text-xs font-display uppercase tracking-widest text-gold-400 font-semibold flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5" /> Primary Scholarly Source
-                </h4>
-                <p className="mt-2 text-xs font-body font-semibold text-gold-100">
-                  {currentEraData.sources[0]?.title}
-                </p>
-                <p className="text-[11px] text-gold-300/70 font-body">
-                  {currentEraData.sources[0]?.authorOrBody} ({currentEraData.sources[0]?.yearOrPeriod})
-                </p>
-                <span className="mt-2 inline-block px-2 py-0.5 rounded-full bg-gold-500/20 text-gold-300 text-[10px] font-display">
-                  {currentEraData.sources[0]?.confidence}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Indenture & Diaspora Highlights Grid */}
-        <div className="mt-10">
-          <div className="flex items-center justify-between gap-4 mb-6">
-            <div>
-              <h3 className="font-display text-2xl font-bold text-gold-100">
-                The Girmitiya & Diaspora Hubs
-              </h3>
-              <p className="text-xs font-body text-gold-300/70 mt-1">
-                Documented historical voyages, ships, and continuous living sanctuaries across the world.
-              </p>
-            </div>
-            <span className="text-xs font-display text-gold-400/80 px-3 py-1 rounded-full border border-gold-500/20 bg-black/40">
-              8 Documented Key Hubs
+        {/* 2. TIMELINE SLIDER & MILESTONES BAR */}
+        <div className="p-6 rounded-3xl border border-gold-500/25 bg-gradient-to-b from-[#0e1222] to-black shadow-xl mb-10">
+          <div className="flex items-center justify-between gap-4 mb-4 text-xs font-display">
+            <span className="text-gold-400 flex items-center gap-1.5 font-semibold">
+              <Sliders className="w-3.5 h-3.5" /> Timeline Navigation Slider
+            </span>
+            <span className="text-stone-400">
+              Milestone {selectedMilestoneIndex + 1} of {eraMilestones.length}
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {DIASPORA_SPECIAL_HUBS.map((hub, i) => (
-              <div
-                key={i}
-                className="p-5 rounded-2xl border border-gold-500/20 bg-black/40 hover:border-gold-400/40 hover:bg-gold-950/20 transition-all flex flex-col justify-between"
+          {/* Interactive Range Slider */}
+          <div className="relative py-2">
+            <input
+              type="range"
+              min="0"
+              max={Math.max(0, eraMilestones.length - 1)}
+              value={selectedMilestoneIndex}
+              onChange={handleSliderChange}
+              className="w-full h-2 bg-black/80 rounded-lg appearance-none cursor-pointer accent-amber-400 border border-gold-500/30"
+            />
+            <div className="flex justify-between text-[10px] font-display text-stone-500 mt-2 px-1">
+              <span>{eraMilestones[0]?.year}</span>
+              <span>{eraMilestones[eraMilestones.length - 1]?.year}</span>
+            </div>
+          </div>
+
+          {/* Milestone Quick Chips */}
+          <div className="flex items-center gap-2 overflow-x-auto py-3 no-scrollbar mt-3 border-t border-white/10">
+            {eraMilestones.map((m, idx) => (
+              <button
+                key={m.id}
+                type="button"
+                onClick={() => {
+                  setSelectedMilestoneIndex(idx)
+                  setIsReadMoreExpanded(false)
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-display transition shrink-0 flex items-center gap-1.5 border ${
+                  selectedMilestoneIndex === idx
+                    ? 'border-gold-400 bg-gold-500/30 text-white font-bold'
+                    : 'border-white/10 bg-black/40 text-stone-400 hover:text-white'
+                }`}
               >
+                <Clock className="w-3 h-3 text-gold-400" />
+                <span>{m.year}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* 3. COMPACT INFORMATION CARD FOR SELECTED MILESTONE */}
+          {currentMilestone && (
+            <div className="mt-5 p-5 sm:p-6 rounded-2xl border border-gold-500/30 bg-black/60 backdrop-blur-md">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-4 border-b border-white/10">
                 <div>
-                  <div className="flex items-center justify-between text-xs text-gold-400 font-display font-semibold">
-                    <span>{hub.year}</span>
-                    <span className="text-[11px] text-gold-300/60 font-body">{hub.population}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-200 border border-amber-500/30">
+                      {currentMilestone.year}
+                    </span>
+                    <span className="text-xs text-stone-400 font-body">
+                      {currentMilestone.exactPeriod}
+                    </span>
                   </div>
-                  <h4 className="mt-2 font-display text-lg font-bold text-gold-100">
-                    {hub.country}
-                  </h4>
-                  <div className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-body text-amber-300/90">
-                    <Ship className="w-3 h-3 text-gold-400" />
-                    <span className="italic">{hub.ship}</span>
-                  </div>
-                  <p className="mt-2 text-xs font-body text-gold-300/75 leading-relaxed">
-                    {hub.highlight}
-                  </p>
+                  <h3 className="font-display text-xl sm:text-2xl font-bold text-gold-100 mt-1.5">
+                    {currentMilestone.title}
+                  </h3>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-gold-500/10 text-[11px] text-gold-400/70 font-body">
-                  {hub.event}
+                {/* Evidence & Confidence Badge */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-display font-medium flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    {currentMilestone.confidence}
+                  </span>
+                </div>
+              </div>
+
+              {/* Origin & Destination Badges */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                <div className="p-3 rounded-xl bg-black/40 border border-white/10">
+                  <span className="text-[10px] uppercase font-bold text-stone-400 block">Origin</span>
+                  <span className="text-xs font-semibold text-gold-200 mt-0.5 block">
+                    {currentMilestone.origin}
+                  </span>
+                </div>
+                <div className="p-3 rounded-xl bg-black/40 border border-white/10">
+                  <span className="text-[10px] uppercase font-bold text-stone-400 block">Destination</span>
+                  <span className="text-xs font-semibold text-gold-200 mt-0.5 block">
+                    {currentMilestone.destination}
+                  </span>
+                </div>
+              </div>
+
+              {/* One-Line Summary */}
+              <p className="mt-4 text-xs sm:text-sm font-body text-stone-200 leading-relaxed">
+                {currentMilestone.summary}
+              </p>
+
+              {/* Action Buttons: See on Map & Expand Read More */}
+              <div className="mt-5 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsReadMoreExpanded(!isReadMoreExpanded)}
+                  className="text-xs font-display font-semibold text-gold-300 hover:text-gold-100 flex items-center gap-1.5 transition"
+                >
+                  <span>{isReadMoreExpanded ? 'Collapse Details' : 'Read Full History'}</span>
+                  {isReadMoreExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleScrollToMap()}
+                  className="py-1.5 px-3.5 rounded-xl bg-gold-500/20 border border-gold-400/40 text-gold-200 hover:bg-gold-500/30 text-xs font-display font-medium transition flex items-center gap-1.5 shadow-sm"
+                >
+                  <span>View Route on World Map</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Expandable "Read More" Panel */}
+              {isReadMoreExpanded && (
+                <div className="mt-4 pt-4 border-t border-gold-500/25 space-y-3 animate-fadeIn text-xs font-body">
+                  <div>
+                    <span className="font-bold text-gold-300 uppercase tracking-wider block text-[10px] mb-1">
+                      Historical Significance
+                    </span>
+                    <p className="text-stone-300 leading-relaxed">
+                      {currentMilestone.significance}
+                    </p>
+                  </div>
+
+                  {currentMilestone.shipsOrRoutes && (
+                    <div className="p-3 rounded-xl bg-[#080d1a] border border-sky-500/20 text-sky-200 flex items-center gap-2.5">
+                      <Ship className="w-4 h-4 text-sky-400 shrink-0" />
+                      <span>{currentMilestone.shipsOrRoutes}</span>
+                    </div>
+                  )}
+
+                  <div>
+                    <span className="font-bold text-gold-300 uppercase tracking-wider block text-[10px] mb-1">
+                      Primary Archaeological & Epigraphic Evidence
+                    </span>
+                    <p className="text-stone-300 leading-relaxed">
+                      {currentMilestone.primaryEvidence}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* 4. MIGRATION ROUTE EXPLORER (Visual styles & Clickable Routes) */}
+        <div className="p-6 rounded-3xl border border-gold-500/20 bg-black/50 backdrop-blur-md">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-white/10">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-display text-gold-400 uppercase tracking-wider font-semibold">
+                <Route className="w-3.5 h-3.5" /> Maritime & Continental Corridors
+              </div>
+              <h3 className="font-display text-xl font-bold text-gold-100 mt-1">
+                Visual Migration Route Explorer
+              </h3>
+            </div>
+            <span className="text-xs text-stone-400 font-body">
+              Click any route to inspect its historical context
+            </span>
+          </div>
+
+          {/* Route Categories Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+            {routeCategories.map((cat, catIdx) => (
+              <div
+                key={catIdx}
+                className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-3"
+              >
+                <div className="flex items-center gap-2 pb-2 border-b border-white/10">
+                  <span className={`w-2.5 h-2.5 rounded-full ${cat.dotColor}`} />
+                  <h4 className="font-display text-xs font-bold text-white">
+                    {cat.styleName}
+                  </h4>
+                </div>
+
+                <div className="space-y-2">
+                  {cat.routes.map((route) => (
+                    <button
+                      key={route.id}
+                      type="button"
+                      onClick={() => setSelectedRouteModal(route)}
+                      className="w-full text-left p-2.5 rounded-xl bg-[#090d18] border border-white/5 hover:border-gold-500/40 hover:bg-gold-500/10 transition group"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-display text-xs font-semibold text-gold-200 group-hover:text-gold-100">
+                          {route.title}
+                        </span>
+                        <ChevronRight className="w-3.5 h-3.5 text-stone-500 group-hover:text-gold-400 shrink-0" />
+                      </div>
+                      <div className="text-[11px] text-stone-400 mt-1 line-clamp-1">
+                        {route.origin} → {route.destination}
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </div>
             ))}
           </div>
         </div>
+
+        {/* COMPACT MODAL FOR CLICKED ROUTE */}
+        {selectedRouteModal && (
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-[#0b0f1d] border border-gold-500/40 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-fadeIn">
+              <div className="flex items-start justify-between gap-3 pb-3 border-b border-white/10">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gold-400">
+                    {selectedRouteModal.eraTitle}
+                  </span>
+                  <h3 className="font-display text-xl font-bold text-white mt-1">
+                    {selectedRouteModal.title}
+                  </h3>
+                  <div className="text-xs text-stone-400">{selectedRouteModal.timePeriod}</div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedRouteModal(null)}
+                  className="p-1.5 rounded-lg text-stone-400 hover:text-white"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {selectedRouteModal.vesselOrType && (
+                <div className="p-3 rounded-xl bg-black/60 border border-sky-500/25 text-xs text-sky-200 flex items-center gap-2">
+                  <Ship className="w-4 h-4 text-sky-400 shrink-0" />
+                  <span>{selectedRouteModal.vesselOrType}</span>
+                </div>
+              )}
+
+              <div className="space-y-3 text-xs font-body text-stone-300">
+                <div>
+                  <span className="text-stone-400 font-bold block text-[10px] uppercase">Origin & Destination</span>
+                  <span className="text-white font-medium">{selectedRouteModal.origin} → {selectedRouteModal.destination}</span>
+                </div>
+
+                <div>
+                  <span className="text-stone-400 font-bold block text-[10px] uppercase">Historical Context</span>
+                  <p className="mt-1 leading-relaxed">{selectedRouteModal.significance}</p>
+                </div>
+
+                <div>
+                  <span className="text-stone-400 font-bold block text-[10px] uppercase">Key Ports & Waypoints</span>
+                  <p className="mt-1">{selectedRouteModal.keyPortsOrStops.join(' • ')}</p>
+                </div>
+
+                <div>
+                  <span className="text-stone-400 font-bold block text-[10px] uppercase">Source Status & Verification</span>
+                  <div className="mt-1 flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px]">
+                      {selectedRouteModal.evidenceConfidence}
+                    </span>
+                    <span className="text-stone-400 text-[11px]">{selectedRouteModal.sourcesSummary}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const id = selectedRouteModal.id
+                    setSelectedRouteModal(null)
+                    handleScrollToMap(id)
+                  }}
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-gold-400 to-amber-500 text-black font-display text-xs font-bold hover:brightness-110 transition flex items-center justify-center gap-1.5"
+                >
+                  <span>Focus Route on Interactive Map</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   )
