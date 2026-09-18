@@ -6,6 +6,7 @@ import Fullscreen3DModal from './components/Fullscreen3DModal'
 import GlobalCosmos3D from './components/GlobalCosmos3D'
 import EpicDetailPage from './components/EpicDetailPage'
 import FestivalsPage from './components/FestivalsPage'
+import VishvaSanghaPage from './components/VishvaSanghaPage'
 import InvalidRoutePage from './components/InvalidRoutePage'
 import IntroExperience from './components/IntroExperience'
 import { useReducedMotion } from './hooks/useReducedMotion'
@@ -35,6 +36,7 @@ function getRoute(): { route: string; invalid: boolean } {
     'purana',
     'devata',
     'festivals',
+    'vishva-sangha',
     'smriti',
     'young-seekers',
     'verify',
@@ -102,6 +104,8 @@ export default function App() {
           return <DevataPage onBack={backHome} />
         case 'festivals':
           return <FestivalsPage onBack={backHome} onNavigate={navigate} />
+        case 'vishva-sangha':
+          return <VishvaSanghaPage />
         case 'smriti':
           return <SmritiPage onBack={backHome} />
         case 'young-seekers':

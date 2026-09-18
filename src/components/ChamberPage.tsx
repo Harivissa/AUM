@@ -27,7 +27,7 @@ const DEVATAS = [
   ['Sūrya','सूर्य','', 'The solar deity, honoured through Vedic hymns, worship and practices such as Sūrya Namaskāra.'],
 ]
 
-function PageFrame({ eyebrow, title, subtitle, onBack, decorations, children }: { eyebrow: string; title: string; subtitle: string; onBack: () => void; decorations?: ReactNode; children: ReactNode }) {
+export function PageFrame({ eyebrow, title, subtitle, onBack, decorations, children }: { eyebrow: string; title: string; subtitle: string; onBack: () => void; decorations?: ReactNode; children: ReactNode }) {
   const { t } = useLang()
   return <main className="relative z-10 min-h-screen pt-28 pb-24 px-4 sm:px-6 overflow-hidden">
     {decorations}

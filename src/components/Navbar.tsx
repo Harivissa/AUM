@@ -21,6 +21,7 @@ export const NAV_LINKS = [
   { id: 'smriti', label: 'Smṛti', sanskrit: 'स्मृतिः', href: '#smriti' },
   { id: 'dharma', label: 'Dharma', sanskrit: 'धर्मः', href: '#dharma' },
   { id: 'festivals', label: 'Festivals', sanskrit: 'उत्सवाः', href: '#festivals' },
+  { id: 'vishva-sangha', label: 'Vishva Saṅgha', sanskrit: 'विश्व संघः', href: '#vishva-sangha' },
   { id: 'verify', label: 'AUM Verify', sanskrit: 'प्रमाणम्', href: '#verify' },
   { id: 'young-seekers', label: 'Young Seekers', sanskrit: 'बाल साधकाः', href: '#young-seekers' },
 ] as const

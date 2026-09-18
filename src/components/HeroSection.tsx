@@ -245,6 +245,7 @@ export default function HeroSection({ reducedMotion, onNavigate }: HeroSectionPr
             { id: 'tirtha', name: 'Tīrtha', sa: 'तीर्थम्', desc: 'Sacred geography & temple architecture atlas', href: '#tirtha' },
             { id: 'devata', name: 'Devatā', sa: 'देवता', desc: 'Forms of worship, iconography & sampradāyas', href: '#devata' },
             { id: 'festivals', name: 'Festivals', sa: 'उत्सवाः', desc: 'Living calendar, rituals & Vināyaka Chavithi', href: '#festivals' },
+            { id: 'vishva-sangha', name: 'Vishva Saṅgha', sa: 'विश्व संघः', desc: 'Global Hindu presence, historical kingdoms & diaspora', href: '#vishva-sangha' },
             { id: 'smriti', name: 'Smṛti', sa: 'स्मृतिः', desc: 'Tolerance, civilizational memory & history', href: '#smriti' },
             { id: 'dharma', name: 'Dharma', sa: 'धर्मः', desc: 'Duty, Karma, Mokṣa, Yoga & Darśanas', href: '#dharma' },
             { id: 'verify', name: 'AUM Verify', sa: 'प्रमाणम्', desc: 'Source-aware verification of Sanskrit claims', href: '#verify' },
