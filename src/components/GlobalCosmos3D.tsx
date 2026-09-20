@@ -2,6 +2,7 @@ import { useRef, useMemo, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Stars, Float, Html } from '@react-three/drei'
 import * as THREE from 'three'
+import { useWebGLSupport } from '../hooks/useWebGLSupport'
 
 interface GlobalCosmos3DProps {
   reducedMotion: boolean
@@ -139,6 +140,10 @@ function CosmicParticles({ reducedMotion }: { reducedMotion: boolean }) {
 }
 
 export default function GlobalCosmos3D({ reducedMotion }: GlobalCosmos3DProps) {
+  const webglSupported = useWebGLSupport()
+
+  if (!webglSupported) return null
+
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-35">
       <Canvas
