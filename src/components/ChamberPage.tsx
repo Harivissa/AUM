@@ -62,9 +62,9 @@ export function DevataPage({ onBack }:{onBack:()=>void}) { return <PageFrame eye
 export function SmritiPage({ onBack }:{onBack:()=>void}) {
   return (
     <PageFrame
-      eyebrow="SMṚTI · स्मृतिः · CIVILIZATIONAL MEMORY"
-      title="Hindu Civilizational History & Memory Archive"
-      subtitle="A rigorous, source-grounded digital archive documenting historical persecution, temple destruction, political-religious policies, resistance, cultural survival, colonial impacts, and modern documented challenges affecting Hindu communities."
+      eyebrow="SMṚTI · स्मृतिः · “THAT WHICH IS REMEMBERED”"
+      title="SMṚTI: The Memory of What Happened"
+      subtitle="“Remember. Preserve. Never Forget.” Civilizations carry memories of both what they built and what they endured."
       onBack={onBack}
     >
       <SmritiSection />

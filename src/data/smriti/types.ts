@@ -1,60 +1,190 @@
-import type { UILang } from '../../i18n'
+export type EvidenceStatus =
+  | 'DOCUMENTED'
+  | 'CORROBORATED'
+  | 'PRIMARY SOURCE'
+  | 'SURVIVOR TESTIMONY'
+  | 'ARCHIVAL RECORD'
+  | 'ACADEMIC CONSENSUS'
+  | 'ARCHAEOLOGICALLY SUPPORTED'
+  | 'ACADEMICALLY DOCUMENTED'
+  | 'GOVERNMENT RECORD'
+  | 'COURT RECORD'
+  | 'PARTIALLY DOCUMENTED'
+  | 'DISPUTED'
+  | 'INSUFFICIENT EVIDENCE'
 
-export type EvidenceLabel =
-  | 'Primary source'
-  | 'Scholarly consensus'
-  | 'Scholarly interpretation'
-  | 'Reported incident'
-  | 'Disputed claim'
-  | 'Insufficient evidence'
-  | 'Requires further verification'
+export type ResearchStatus =
+  | 'VERIFIED'
+  | 'UNDER REVIEW'
+  | 'SOURCE NEEDED'
+  | 'DISPUTED'
+  | 'INSUFFICIENT EVIDENCE'
 
-export type SmritiSubsectionId =
-  | 'medieval'
-  | 'sultanate'
-  | 'mughal'
-  | 'goa'
-  | 'colonial'
-  | 'partition'
-  | 'bangladesh'
+export type IncidentType =
+  | 'ATTACKS'
+  | 'PERSECUTION'
+  | 'TEMPLE DESTRUCTION'
+  | 'MASSACRES'
+  | 'FORCED CONVERSION'
+  | 'DISPLACEMENT'
+  | 'EXODUS'
+  | 'PARTITION'
+  | 'HERITAGE DESTRUCTION'
+  | 'SURVIVOR ACCOUNTS'
+  | 'RECONSTRUCTION'
+  | 'MEMORIALS'
 
-export interface LocalizedText {
-  en: string
-  te: string
-  hi: string
-  sa: string
-  ta: string
-  kn: string
+export type MotiveType =
+  | 'religious motive'
+  | 'political motive'
+  | 'military motive'
+  | 'economic motive'
+  | 'community conflict'
+  | 'mixed motives'
+  | 'uncertain'
+
+export type TimelinePeriod =
+  | 'Ancient'
+  | 'Early Medieval'
+  | 'Medieval'
+  | 'Early Modern'
+  | 'Colonial'
+  | 'Partition'
+  | 'Post-Independence'
+  | 'Contemporary'
+
+export type ArchivalMediaType =
+  | 'photograph'
+  | 'temple_photo'
+  | 'document'
+  | 'newspaper'
+  | 'map'
+  | 'manuscript'
+  | 'survivor_record'
+  | 'court_record'
+  | 'memorial_photo'
+  | 'reconstruction_photo'
+  | 'archaeological_drawing'
+
+export interface ArchivalRecord {
+  type: ArchivalMediaType
+  caption: string
+  sourceProvenance: string
+  imageUrl?: string
+  isPendingSource?: boolean
+  labelBadge: string
+  catalogueNumber: string
+  rightsOrLicense?: string
+  date?: string
+  creatorOrPhotographer?: string
+  confidence?: 'High' | 'Medium' | 'Pending Verification'
 }
 
-export interface AcademicSource {
-  author: string
+export interface SurvivorAccount {
+  narrator: string
+  context: string
+  excerpt: string
+  citation: string
+  yearOrDate?: string
+}
+
+export interface StructuredSource {
   title: string
-  publication: string
-  year: number | string
-  publisher?: string
-  doiOrUrl?: string
-  annotation: LocalizedText
+  author?: string
+  institution?: string
+  publicationYear?: number | string
+  sourceType: 'PRIMARY SOURCE' | 'ARCHIVAL RECORD' | 'GOVERNMENT / COURT' | 'ARCHAEOLOGICAL' | 'ACADEMIC BOOK / PAPER' | 'CONTEMPORARY PRESS' | 'SURVIVOR ARCHIVE'
+  url?: string
+  page?: string
+  quotationOrPassage?: string
+  accessedDate?: string
+  reliabilityNotes?: string
 }
 
-export interface SmritiEntry {
+export interface LegacySources {
+  primary?: string[]
+  archival?: string[]
+  governmentOrCourt?: string[]
+  academic?: string[]
+  archaeological?: string[]
+}
+
+export interface CasualtiesFigure {
+  displaySummary: string
+  deaths?: string
+  injuries?: string
+  displaced?: string
+  sourceA?: { estimate: string; source: string }
+  sourceB?: { estimate: string; source: string }
+  explanationOfDifference?: string
+}
+
+export type SpecialCollectionId =
+  | 'TEMPLE_DESTRUCTION'
+  | 'MASSACRES'
+  | 'ATTACKS_ON_HINDU_COMMUNITIES'
+  | 'FORCED_CONVERSION'
+  | 'DISPLACEMENT_EXODUS'
+  | 'EXODUS'
+  | 'PARTITION'
+  | 'KASHMIRI_PANDITS'
+  | 'BANGLADESH_HINDUS'
+  | 'PAKISTAN_HINDUS'
+  | 'AFGHAN_HINDUS'
+  | 'GOA_INQUISITION'
+  | 'COLONIAL_MISSIONARY_PRESSURES'
+  | 'HERITAGE_LIBRARY_DESTRUCTION'
+  | 'SURVIVOR_TESTIMONY'
+  | 'MISSING_LOST_HERITAGE'
+  | 'MODERN_INCIDENTS'
+  | 'RECONSTRUCTION_SURVIVAL'
+  | 'MEMORIALS'
+
+export interface SpecialCollectionMeta {
+  id: SpecialCollectionId
+  label: string
+  sanskritLabel?: string
+  description: string
+  filterPredicate: (item: SmritiCase) => boolean
+}
+
+export interface SmritiCase {
   id: string
-  subsectionId: SmritiSubsectionId
-  title: LocalizedText
-  timeframe: string
-  location: LocalizedText
-  evidenceLabel: EvidenceLabel
-  summary: LocalizedText
-  historicalContext: LocalizedText
-  primarySourcesAndRecords?: LocalizedText
-  scholarlyAnalysisAndDebates?: LocalizedText
-  resistanceAndSurvival?: LocalizedText
-  // For modern documented cases (e.g. Bangladesh timeline)
-  verifiedDetails?: {
-    date: string
-    reportedCasualtiesOrDamage: LocalizedText
-    investigationStatus: LocalizedText
-    verificationStatus: 'Confirmed' | 'Disputed' | 'Under Investigation'
-  }
-  sources: AcademicSource[]
+  catalogueCode: string
+  title: string
+  sanskritTitle?: string
+  alternateTitles?: string[]
+  location: string
+  region: string
+  country: string
+  coordinates: { lat: number; lng: number }
+  startDate: string
+  endDate?: string
+  dateDisplay: string
+  timelinePeriod: TimelinePeriod
+  incidentType: IncidentType
+  motive: MotiveType
+  evidenceStatus: EvidenceStatus
+  researchStatus: ResearchStatus
+  affectedCommunity: string
+  summary: string
+  whatHappened: string
+  whoWasAffected: string
+  whereText: string
+  whenText: string
+  whatWasLost: string
+  casualties?: CasualtiesFigure
+  propertyLoss?: string
+  heritageLoss?: string
+  displacement?: string
+  responsibility: string
+  aftermath: string
+  reconstruction: string
+  archivalItem: ArchivalRecord
+  additionalArchivalRecords?: ArchivalRecord[]
+  survivorAccounts?: SurvivorAccount[]
+  sources: LegacySources
+  detailedSources?: StructuredSource[]
+  specialCollections?: SpecialCollectionId[]
+  relatedCaseIds?: string[]
 }

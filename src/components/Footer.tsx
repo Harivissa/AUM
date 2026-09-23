@@ -35,7 +35,7 @@ export default function Footer() {
               Where Science Ends, Sanātana Continues.
             </p>
             <p className="font-body text-xs sm:text-sm text-gold-300/75 leading-relaxed font-light">
-              An interactive digital knowledge sanctuary dedicated to canonical scriptures, sacred geography, living traditions, and source-aware civilizational memory.
+              An authentic digital knowledge sanctuary dedicated to Sanātana Dharma, canonical Śāstra, sacred geography, historical memory, and the transmission of Hindu civilizational heritage to future generations.
             </p>
 
             {/* Sacred Benediction */}
@@ -81,7 +81,8 @@ export default function Footer() {
               <li><a href="#shastra" className="hover:text-gold-100 transition-colors block">✦ Itihāsa · Rāmāyaṇa & Mahābhārata</a></li>
               <li><a href="#tirtha" className="hover:text-gold-100 transition-colors block">✦ Tīrtha · Sacred Places & Temples</a></li>
               <li><a href="#festivals" className="hover:text-gold-100 transition-colors block">✦ Festivals · Vināyaka Chavithi</a></li>
-              <li><a href="#smriti" className="hover:text-gold-100 transition-colors block">✦ Smṛti · Tolerance & Pluralism</a></li>
+              <li><a href="#smriti" className="hover:text-gold-100 transition-colors block">✦ Smṛti · Civilizational Memory & History</a></li>
+              <li><a href="#vishva-sangha" className="hover:text-gold-100 transition-colors block">✦ Vishva Saṅgha · Global Hindu Heritage</a></li>
               <li><a href="#verify" className="hover:text-gold-100 transition-colors block">✦ AUM Verify · Source Integrity</a></li>
             </ul>
           </div>
